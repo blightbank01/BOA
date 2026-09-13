@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Login | Blight Bank</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #eef4fb, #ffffff);
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      height: 75px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7%;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 800;
+      color: #0b1f3a;
+    }
+
+    .back {
+      text-decoration: none;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .login-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      background: #ffffff;
+      padding: 45px;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.10);
+    }
+
+    .login-card h1 {
+      color: #0b1f3a;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .login-card .subtitle {
+      color: #687386;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #1f2937;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .input-group input:focus {
+      border-color: #0b1f3a;
+    }
+
+    .password-row {
+      position: relative;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 13px;
+      top: 13px;
+      border: none;
+      background: none;
+      color: #0b1f3a;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .forgot {
+      display: block;
+      text-align: right;
+      margin-top: -8px;
+      margin-bottom: 25px;
+      color: #0b1f3a;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 7px;
+      background: #0b1f3a;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .login-button:hover {
+      background: #102f56;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 30px 0;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 1px;
+      background: #e5e7eb;
+      flex: 1;
+    }
+
+    .signup {
+      text-align: center;
+      color: #687386;
+      font-size: 14px;
+    }
+
+    .signup a {
+      color: #0b1f3a;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .security {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 12px;
+      color: #8a94a6;
+    }
+
+    @media (max-width: 500px) {
+      .login-card {
+        padding: 30px 24px;
+      }
+
+      .login-card h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">BLIGHT BANK</div>
+
+    <a class="back" href="index.html">
+      Back to Home
+    </a>
+  </header>
+
+
+  <main class="login-area">
+
+    <div class="login-card">
+
+      <h1>Welcome back</h1>
+
+      <p class="subtitle">
+        Sign in to securely access your Blight Bank account.
+      </p>
+
+
+      <form onsubmit="return loginDemo()">
+
+        <div class="input-group">
+          <label for="username">Username or Email</label>
+
+          <input
+            type="text"
+            id="username"
+            placeholder="Enter your username or email"
+            required
+          >
+        </div>
+
+
+        <div class="input-group">
+          <label for="password">Password</label>
+
+          <div class="password-row">
+
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              required
+            >
+
+            <button
+              type="button"
+              class="show-password"
+              onclick="togglePassword()"
+            >
+              Show
+            </button>
+
+          </div>
+        </div>
+
+
+        <a href="#" class="forgot">
+          Forgot password?
+        </a>
+
+
+        <button type="submit" class="login-button">
+          Sign In
+        </button>
+
+      </form>
+
+
+      <div class="divider">
+        OR
+      </div>
+
+
+      <div class="signup">
+        Don't have an account?
+        <a href="#">Open an Account</a>
+      </div>
+
+
+      <div class="security">
+        🔐 Your connection is protected by Blight Bank security.
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+    function togglePassword() {
+
+      const password = document.getElementById("password");
+      const button = document.querySelector(".show-password");
+
+      if (password.type === "password") {
+        password.type = "text";
+        button.textContent = "Hide";
+      } else {
+        password.type = "password";
+        button.textContent = "Show";
+      }
+
+    }
+
+
+    function loginDemo() {
+
+      alert("Demo login page. Authentication will be connected later.");
+
+      return false;
+    }
+
+  </script>
+
+</body>
+</html>
