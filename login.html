@@ -277,33 +277,36 @@
 
   </main>
 
+<script>
+  function togglePassword() {
+    const password = document.getElementById("password");
+    const button = document.querySelector(".show-password");
 
-  <script>
-
-    function togglePassword() {
-
-      const password = document.getElementById("password");
-      const button = document.querySelector(".show-password");
-
-      if (password.type === "password") {
-        password.type = "text";
-        button.textContent = "Hide";
-      } else {
-        password.type = "password";
-        button.textContent = "Show";
-      }
-
+    if (password.type === "password") {
+      password.type = "text";
+      button.textContent = "Hide";
+    } else {
+      password.type = "password";
+      button.textContent = "Show";
     }
+  }
 
+  function loginDemo() {
+    const email = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
 
-    function loginDemo() {
-
-      alert("Demo login page. Authentication will be connected later.");
-
+    if (
+      email === "johnwyatt508@gmail.com" &&
+      password === "Stumpy@47"
+    ) {
+      window.location.href = "dashboard.html";
       return false;
     }
 
-  </script>
+    alert("Invalid email or password.");
+    return false;
+  }
+</script>
 
 </body>
 </html>
