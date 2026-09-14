@@ -1565,9 +1565,9 @@ body {
             </div>
 
             <div>
-              <strong>
-                +234 800 123 4567
-              </strong>
+     <strong>
+  +19162334022
+</strong>
 
               <span>
                 Call us
@@ -1585,8 +1585,9 @@ body {
 
             <div>
               <strong>
-                support@blightbank.com
-              </strong>
+  blightbank@gmail.com
+</strong>
+
 
               <span>
                 Email us
@@ -1703,12 +1704,6 @@ body {
 
 </main>
 
-
-<div class="demo-label">
-  DEMO ACCOUNT
-</div>
-
-
 <script>
 
 function openTransfer() {
@@ -1716,7 +1711,12 @@ function openTransfer() {
 }
 
 function contactSupport() {
-  alert("Blight Bank Support\n\nPhone: +234 800 123 4567\nEmail: support@blightbank.com\n\nLive chat is available in the demo.");
+  alert(
+    "Blight Bank Support\n\n" +
+    "Phone: +19162334022\n" +
+    "Email: blightbank@gmail.com\n\n" +
+    "Live chat is available in the demo."
+  );
 }
 
 function searchTransactions(value) {
@@ -1731,16 +1731,11 @@ function searchTransactions(value) {
     const text =
       transaction.innerText.toLowerCase();
 
-    if (text.includes(value)) {
-      transaction.style.display = "grid";
-    } else {
-      transaction.style.display = "none";
-    }
+    transaction.style.display =
+      text.includes(value) ? "grid" : "none";
 
   });
+
 }
 
 </script>
-
-</body>
-</html>
