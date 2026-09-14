@@ -1707,7 +1707,7 @@ body {
 <script>
 
 function openTransfer() {
-  alert("Transfer Money will open here in the next step of the Blight Bank demo.");
+  window.location.href = "transfer.html";
 }
 
 function contactSupport() {
@@ -1723,7 +1723,7 @@ function searchTransactions(value) {
 
   const transactions =
     document.querySelectorAll(".transaction");
-
+ 
   value = value.toLowerCase();
 
   transactions.forEach(function(transaction) {
