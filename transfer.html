@@ -1347,537 +1347,728 @@
 
   <div class="toast" id="toast"></div>
 
-  <script>
-    const AVAILABLE_BALANCE = 2600450.00;
-    const TRANSFER_FEE = 4.50;
-    const DAILY_LIMIT = 25000.00;
+<script>
+  const DEFAULT_BALANCE = 2600450.00;
+  const TRANSFER_FEE = 4.50;
+  const DAILY_LIMIT = 25000.00;
 
-    let recipientVerified = false;
-    let currentTransfer = {};
-    let verificationTimer = null;
+  let recipientVerified = false;
+  let currentTransfer = {};
+  let verificationTimer = null;
+  let balanceDeducted = false;
 
-    const steps = [
-      document.getElementById("step1"),
-      document.getElementById("step2"),
-      document.getElementById("step3")
+  const steps = [
+    document.getElementById("step1"),
+    document.getElementById("step2"),
+    document.getElementById("step3")
+  ];
+
+  function getBalance() {
+    const saved = parseFloat(
+      localStorage.getItem("blightBankCheckingBalance")
+    );
+
+    return Number.isFinite(saved) ? saved : DEFAULT_BALANCE;
+  }
+
+  function saveBalance(balance) {
+    localStorage.setItem(
+      "blightBankCheckingBalance",
+      balance.toFixed(2)
+    );
+  }
+
+  function getTransactions() {
+    try {
+      return JSON.parse(
+        localStorage.getItem("blightBankTransactions")
+      ) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveTransaction(transaction) {
+    const transactions = getTransactions();
+
+    transactions.unshift(transaction);
+
+    localStorage.setItem(
+      "blightBankTransactions",
+      JSON.stringify(transactions)
+    );
+  }
+
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, 3500);
+  }
+
+  function contactSupport() {
+    alert(
+      "Blight Bank Support\n\n" +
+      "Phone: +19162334022\n" +
+      "Email: blightbank@gmail.com"
+    );
+  }
+
+  function updateAvailableBalance() {
+    document.getElementById("availableBalance").textContent =
+      formatCurrency(getBalance());
+  }
+
+  function resetVerification() {
+    recipientVerified = false;
+
+    const verifyBox = document.getElementById("verifyBox");
+    const verifiedRecipient = document.getElementById("verifiedRecipient");
+    const continueBtn = document.getElementById("continueBtn");
+
+    verifyBox.style.display = "none";
+    verifiedRecipient.style.display = "none";
+    continueBtn.disabled = true;
+
+    for (let i = 1; i <= 4; i++) {
+      const step = document.getElementById("verificationStep" + i);
+
+      step.classList.remove("active", "completed");
+
+      const icon = step.querySelector(".verification-icon");
+      icon.textContent = i;
+    }
+  }
+
+  function verifyRecipient() {
+    const bank = document.getElementById("bank").value;
+    const accountType = document.getElementById("accountType").value;
+    const routingNumber =
+      document.getElementById("routingNumber").value.trim();
+    const accountNumber =
+      document.getElementById("accountNumber").value.trim();
+    const recipientName =
+      document.getElementById("recipientName").value.trim();
+
+    if (
+      !bank ||
+      !accountType ||
+      !routingNumber ||
+      !accountNumber ||
+      !recipientName
+    ) {
+      showToast("Please complete all recipient details.");
+      return;
+    }
+
+    if (!/^\d{9}$/.test(routingNumber)) {
+      showToast("Routing number must contain 9 digits.");
+      return;
+    }
+
+    if (!/^\d{4,17}$/.test(accountNumber)) {
+      showToast("Please enter a valid account number.");
+      return;
+    }
+
+    resetVerification();
+
+    const verifyBox = document.getElementById("verifyBox");
+    const verifyBtn = document.getElementById("verifyBtn");
+
+    verifyBox.style.display = "block";
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = "Verifying...";
+
+    const verificationSteps = [
+      document.getElementById("verificationStep1"),
+      document.getElementById("verificationStep2"),
+      document.getElementById("verificationStep3"),
+      document.getElementById("verificationStep4")
     ];
 
-    function showToast(message) {
-      const toast = document.getElementById("toast");
+    let current = 0;
 
-      toast.textContent = message;
-      toast.style.display = "block";
+    verificationTimer = setInterval(() => {
 
-      setTimeout(() => {
-        toast.style.display = "none";
-      }, 3500);
-    }
+      if (current > 0) {
+        verificationSteps[current - 1]
+          .classList.remove("active");
 
-    function contactSupport() {
-      alert(
-        "Blight Bank Support\n\n" +
-        "Phone: +19162334022\n" +
-        "Email: blightbank@gmail.com"
-      );
-    }
+        verificationSteps[current - 1]
+          .classList.add("completed");
 
-    function resetVerification() {
-      recipientVerified = false;
-
-      const verifyBox = document.getElementById("verifyBox");
-      const verifiedRecipient = document.getElementById("verifiedRecipient");
-      const continueBtn = document.getElementById("continueBtn");
-
-      verifyBox.style.display = "none";
-      verifiedRecipient.style.display = "none";
-      continueBtn.disabled = true;
-
-      for (let i = 1; i <= 4; i++) {
-        const step = document.getElementById("verificationStep" + i);
-
-        step.classList.remove("active", "completed");
-
-        const icon = step.querySelector(".verification-icon");
-        icon.textContent = i;
-      }
-    }
-
-    function verifyRecipient() {
-      const bank = document.getElementById("bank").value;
-      const accountType = document.getElementById("accountType").value;
-      const routingNumber = document.getElementById("routingNumber").value.trim();
-      const accountNumber = document.getElementById("accountNumber").value.trim();
-      const recipientName = document.getElementById("recipientName").value.trim();
-
-      if (!bank || !accountType || !routingNumber || !accountNumber || !recipientName) {
-        showToast("Please complete all recipient details.");
-        return;
+        verificationSteps[current - 1]
+          .querySelector(".verification-icon")
+          .textContent = "✓";
       }
 
-      if (!/^\d{9}$/.test(routingNumber)) {
-        showToast("Routing number must contain 9 digits.");
-        return;
+      if (current < verificationSteps.length) {
+        verificationSteps[current]
+          .classList.add("active");
+
+        current++;
       }
 
-      if (!/^\d{4,17}$/.test(accountNumber)) {
-        showToast("Please enter a valid account number.");
-        return;
-      }
+      if (current === verificationSteps.length) {
+        clearInterval(verificationTimer);
 
-      resetVerification();
+        setTimeout(() => {
 
-      const verifyBox = document.getElementById("verifyBox");
-      const verifyBtn = document.getElementById("verifyBtn");
+          const lastStep = verificationSteps[3];
 
-      verifyBox.style.display = "block";
-      verifyBtn.disabled = true;
-      verifyBtn.textContent = "Verifying...";
+          lastStep.classList.remove("active");
+          lastStep.classList.add("completed");
 
-      const verificationSteps = [
-        document.getElementById("verificationStep1"),
-        document.getElementById("verificationStep2"),
-        document.getElementById("verificationStep3"),
-        document.getElementById("verificationStep4")
-      ];
+          lastStep.querySelector(".verification-icon")
+            .textContent = "✓";
 
-      let current = 0;
+          recipientVerified = true;
 
-      verificationTimer = setInterval(() => {
+          document.getElementById("verifiedRecipient")
+            .style.display = "block";
 
-        if (current > 0) {
-          verificationSteps[current - 1].classList.remove("active");
-          verificationSteps[current - 1].classList.add("completed");
+          document.getElementById("verifiedName")
+            .textContent = recipientName;
 
-          const previousIcon =
-            verificationSteps[current - 1].querySelector(".verification-icon");
-
-          previousIcon.textContent = "✓";
-        }
-
-        if (current < verificationSteps.length) {
-          verificationSteps[current].classList.add("active");
-          current++;
-        }
-
-        if (current === verificationSteps.length) {
-          clearInterval(verificationTimer);
-
-          setTimeout(() => {
-
-            const lastStep = verificationSteps[3];
-
-            lastStep.classList.remove("active");
-            lastStep.classList.add("completed");
-
-            lastStep.querySelector(".verification-icon").textContent = "✓";
-
-            recipientVerified = true;
-
-            document.getElementById("verifiedRecipient").style.display = "block";
-
-            document.getElementById("verifiedName").textContent =
-              recipientName;
-
-            document.getElementById("verifiedDetails").textContent =
+          document.getElementById("verifiedDetails")
+            .textContent =
               bank +
               " • " +
               accountType +
               " •••• " +
               accountNumber.slice(-4);
 
-            verifyBtn.disabled = false;
-            verifyBtn.textContent = "Recipient Verified";
+          verifyBtn.disabled = false;
+          verifyBtn.textContent = "Recipient Verified";
 
-            document.getElementById("continueBtn").disabled = false;
+          document.getElementById("continueBtn")
+            .disabled = false;
 
-            showToast("Recipient information verified.");
+          showToast("Recipient information verified.");
 
-          }, 700);
-        }
-
-      }, 800);
-    }
-
-    function validateRecipient() {
-      if (!recipientVerified) {
-        showToast("Please verify the recipient first.");
-        return false;
+        }, 700);
       }
 
-      const amount = parseFloat(
-        document.getElementById("amount").value
+    }, 800);
+  }
+
+  function validateRecipient() {
+    if (!recipientVerified) {
+      showToast("Please verify the recipient first.");
+      return false;
+    }
+
+    const amount = parseFloat(
+      document.getElementById("amount").value
+    );
+
+    const amountError =
+      document.getElementById("amountError");
+
+    amountError.style.display = "none";
+    amountError.textContent = "";
+
+    if (!amount || amount <= 0) {
+      amountError.textContent =
+        "Enter a valid transfer amount.";
+
+      amountError.style.display = "block";
+      return false;
+    }
+
+    if (amount > DAILY_LIMIT) {
+      amountError.textContent =
+        "This transfer exceeds the daily transfer limit of $25,000.00.";
+
+      amountError.style.display = "block";
+      return false;
+    }
+
+    const total = amount + TRANSFER_FEE;
+    const currentBalance = getBalance();
+
+    if (total > currentBalance) {
+      amountError.textContent =
+        "Insufficient available balance for this transfer and fee.";
+
+      amountError.style.display = "block";
+      return false;
+    }
+
+    return true;
+  }
+
+  function goToReview() {
+    if (!validateRecipient()) {
+      return;
+    }
+
+    const bank = document.getElementById("bank").value;
+    const accountType =
+      document.getElementById("accountType").value;
+
+    const routingNumber =
+      document.getElementById("routingNumber")
+        .value.trim();
+
+    const accountNumber =
+      document.getElementById("accountNumber")
+        .value.trim();
+
+    const recipientName =
+      document.getElementById("recipientName")
+        .value.trim();
+
+    const amount =
+      parseFloat(document.getElementById("amount").value);
+
+    const total = amount + TRANSFER_FEE;
+
+    currentTransfer = {
+      bank,
+      accountType,
+      routingNumber,
+      accountNumber,
+      recipientName,
+      amount,
+      fee: TRANSFER_FEE,
+      total,
+      note: document.getElementById("note")
+        .value.trim()
+    };
+
+    document.getElementById("reviewRecipient")
+      .textContent = recipientName;
+
+    document.getElementById("reviewBank")
+      .textContent = bank;
+
+    document.getElementById("reviewAccountType")
+      .textContent = accountType;
+
+    document.getElementById("reviewAccountNumber")
+      .textContent = "•••• " + accountNumber.slice(-4);
+
+    document.getElementById("reviewRoutingNumber")
+      .textContent = routingNumber;
+
+    document.getElementById("reviewAmount")
+      .textContent = formatCurrency(amount);
+
+    document.getElementById("reviewFee")
+      .textContent = formatCurrency(TRANSFER_FEE);
+
+    document.getElementById("reviewTotal")
+      .textContent = formatCurrency(total);
+
+    document.getElementById("recipientStep")
+      .style.display = "none";
+
+    document.getElementById("reviewStep")
+      .style.display = "block";
+
+    updateSteps(2);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  function startConfirmation() {
+    document.getElementById("reviewStep")
+      .style.display = "none";
+
+    document.getElementById("otpStep")
+      .style.display = "block";
+
+    updateSteps(3);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+  function processTransfer() {
+    const otp =
+      document.getElementById("otpInput")
+        .value.trim();
+
+    if (!/^\d{6}$/.test(otp)) {
+      showToast("Enter the 6-digit security code.");
+      return;
+    }
+
+    const currentBalance = getBalance();
+
+    if (currentTransfer.total > currentBalance) {
+      showToast(
+        "Insufficient available balance."
       );
-
-      const amountError = document.getElementById("amountError");
-
-      amountError.style.display = "none";
-      amountError.textContent = "";
-
-      if (!amount || amount <= 0) {
-        amountError.textContent = "Enter a valid transfer amount.";
-        amountError.style.display = "block";
-        return false;
-      }
-
-      if (amount > DAILY_LIMIT) {
-        amountError.textContent =
-          "This transfer exceeds the daily transfer limit of $25,000.00.";
-
-        amountError.style.display = "block";
-        return false;
-      }
-
-      const total = amount + TRANSFER_FEE;
-
-      if (total > AVAILABLE_BALANCE) {
-        amountError.textContent =
-          "Insufficient available balance for this transfer and fee.";
-
-        amountError.style.display = "block";
-        return false;
-      }
-
-      return true;
+      return;
     }
 
-    function goToReview() {
-      if (!validateRecipient()) {
-        return;
+    document.getElementById("otpStep")
+      .style.display = "none";
+
+    document.getElementById("processingStep")
+      .style.display = "block";
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+    const processingItems = [
+      document.getElementById("processingItem1"),
+      document.getElementById("processingItem2"),
+      document.getElementById("processingItem3"),
+      document.getElementById("processingItem4")
+    ];
+
+    processingItems.forEach((item, index) => {
+      item.classList.remove("active", "completed");
+
+      item.querySelector(".trail-icon")
+        .textContent = index + 1;
+    });
+
+    let current = 0;
+
+    const timer = setInterval(() => {
+
+      if (current > 0) {
+        processingItems[current - 1]
+          .classList.remove("active");
+
+        processingItems[current - 1]
+          .classList.add("completed");
+
+        processingItems[current - 1]
+          .querySelector(".trail-icon")
+          .textContent = "✓";
       }
 
-      const bank = document.getElementById("bank").value;
-      const accountType = document.getElementById("accountType").value;
-      const routingNumber =
-        document.getElementById("routingNumber").value.trim();
-      const accountNumber =
-        document.getElementById("accountNumber").value.trim();
-      const recipientName =
-        document.getElementById("recipientName").value.trim();
-      const amount =
-        parseFloat(document.getElementById("amount").value);
+      if (current < processingItems.length) {
+        processingItems[current]
+          .classList.add("active");
 
-      const total = amount + TRANSFER_FEE;
-
-      currentTransfer = {
-        bank,
-        accountType,
-        routingNumber,
-        accountNumber,
-        recipientName,
-        amount,
-        fee: TRANSFER_FEE,
-        total,
-        note: document.getElementById("note").value.trim()
-      };
-
-      document.getElementById("reviewRecipient").textContent =
-        recipientName;
-
-      document.getElementById("reviewBank").textContent =
-        bank;
-
-      document.getElementById("reviewAccountType").textContent =
-        accountType;
-
-      document.getElementById("reviewAccountNumber").textContent =
-        "•••• " + accountNumber.slice(-4);
-
-      document.getElementById("reviewRoutingNumber").textContent =
-        routingNumber;
-
-      document.getElementById("reviewAmount").textContent =
-        formatCurrency(amount);
-
-      document.getElementById("reviewFee").textContent =
-        formatCurrency(TRANSFER_FEE);
-
-      document.getElementById("reviewTotal").textContent =
-        formatCurrency(total);
-
-      document.getElementById("recipientStep").style.display = "none";
-      document.getElementById("reviewStep").style.display = "block";
-
-      updateSteps(2);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function startConfirmation() {
-      document.getElementById("reviewStep").style.display = "none";
-      document.getElementById("otpStep").style.display = "block";
-
-      updateSteps(3);
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function processTransfer() {
-      const otp = document.getElementById("otpInput").value.trim();
-
-      if (!/^\d{6}$/.test(otp)) {
-        showToast("Enter the 6-digit security code.");
-        return;
+        current++;
       }
 
-      document.getElementById("otpStep").style.display = "none";
-      document.getElementById("processingStep").style.display = "block";
+      if (current === processingItems.length) {
+        clearInterval(timer);
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(() => {
 
-      const processingItems = [
-        document.getElementById("processingItem1"),
-        document.getElementById("processingItem2"),
-        document.getElementById("processingItem3"),
-        document.getElementById("processingItem4")
-      ];
+          processingItems[3]
+            .classList.remove("active");
 
-      processingItems.forEach(item => {
-        item.classList.remove("active", "completed");
+          processingItems[3]
+            .classList.add("completed");
 
-        const icon = item.querySelector(".trail-icon");
-
-        icon.textContent =
-          Array.from(processingItems).indexOf(item) + 1;
-      });
-
-      let current = 0;
-
-      const timer = setInterval(() => {
-
-        if (current > 0) {
-          processingItems[current - 1].classList.remove("active");
-          processingItems[current - 1].classList.add("completed");
-
-          processingItems[current - 1]
+          processingItems[3]
             .querySelector(".trail-icon")
             .textContent = "✓";
-        }
 
-        if (current < processingItems.length) {
-          processingItems[current].classList.add("active");
-          current++;
-        }
+          showSuccess();
 
-        if (current === processingItems.length) {
-          clearInterval(timer);
+        }, 900);
+      }
 
-          setTimeout(() => {
-            processingItems[3].classList.remove("active");
-            processingItems[3].classList.add("completed");
+    }, 900);
+  }
 
-            processingItems[3]
-              .querySelector(".trail-icon")
-              .textContent = "✓";
+  function showSuccess() {
 
-            showSuccess();
+    if (!balanceDeducted) {
 
-          }, 900);
-        }
+      const oldBalance = getBalance();
 
-      }, 900);
+      const newBalance =
+        oldBalance - currentTransfer.total;
+
+      saveBalance(newBalance);
+
+      balanceDeducted = true;
     }
 
-    function showSuccess() {
-      const confirmation =
-        "BL" +
-        Date.now().toString().slice(-10);
+    const confirmation =
+      "BL" +
+      Date.now().toString().slice(-10);
 
-      document.getElementById("processingStep").style.display = "none";
-      document.getElementById("successStep").style.display = "block";
+    const transaction = {
+      id: confirmation,
+      recipient: currentTransfer.recipientName,
+      bank: currentTransfer.bank,
+      accountType: currentTransfer.accountType,
+      accountLast4:
+        currentTransfer.accountNumber.slice(-4),
+      amount: Number(currentTransfer.amount),
+      fee: Number(currentTransfer.fee),
+      total: Number(currentTransfer.total),
+      note: currentTransfer.note,
+      type: "Transfer",
+      status: "Completed",
+      date: new Date().toISOString()
+    };
 
-      document.getElementById("receiptRecipient").textContent =
-        currentTransfer.recipientName;
+    saveTransaction(transaction);
 
-      document.getElementById("receiptBank").textContent =
-        currentTransfer.bank;
+    document.getElementById("processingStep")
+      .style.display = "none";
 
-      document.getElementById("receiptAmount").textContent =
+    document.getElementById("successStep")
+      .style.display = "block";
+
+    document.getElementById("receiptRecipient")
+      .textContent = currentTransfer.recipientName;
+
+    document.getElementById("receiptBank")
+      .textContent = currentTransfer.bank;
+
+    document.getElementById("receiptAmount")
+      .textContent =
         formatCurrency(currentTransfer.amount);
 
-      document.getElementById("receiptFee").textContent =
+    document.getElementById("receiptFee")
+      .textContent =
         formatCurrency(currentTransfer.fee);
 
-      document.getElementById("receiptTotal").textContent =
+    document.getElementById("receiptTotal")
+      .textContent =
         formatCurrency(currentTransfer.total);
 
-      document.getElementById("confirmationNumber").textContent =
-        confirmation;
+    document.getElementById("confirmationNumber")
+      .textContent = confirmation;
 
-      updateSteps(3);
+    updateSteps(3);
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
 
-      showToast("Transfer successfully submitted.");
-    }
+    showToast("Transfer successfully submitted.");
+  }
 
-    function backToRecipient() {
-      document.getElementById("reviewStep").style.display = "none";
-      document.getElementById("recipientStep").style.display = "block";
+  function backToRecipient() {
+    document.getElementById("reviewStep")
+      .style.display = "none";
 
-      updateSteps(1);
+    document.getElementById("recipientStep")
+      .style.display = "block";
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    updateSteps(1);
 
-    function backToReview() {
-      document.getElementById("otpStep").style.display = "none";
-      document.getElementById("reviewStep").style.display = "block";
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
 
-      updateSteps(2);
+  function backToReview() {
+    document.getElementById("otpStep")
+      .style.display = "none";
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    document.getElementById("reviewStep")
+      .style.display = "block";
 
-    function updateSteps(activeStep) {
-      steps.forEach((step, index) => {
+    updateSteps(2);
 
-        step.classList.remove("active", "completed");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
 
-        if (index + 1 < activeStep) {
-          step.classList.add("completed");
+  function updateSteps(activeStep) {
+    steps.forEach((step, index) => {
 
-          step.querySelector(".step-number").textContent = "✓";
-
-        } else if (index + 1 === activeStep) {
-          step.classList.add("active");
-
-          step.querySelector(".step-number").textContent =
-            index + 1;
-
-        } else {
-          step.querySelector(".step-number").textContent =
-            index + 1;
-        }
-      });
-    }
-
-    function formatCurrency(amount) {
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD"
-      }).format(amount);
-    }
-
-    function printReceipt() {
-      const receipt = document.getElementById("receipt").innerHTML;
-
-      const printWindow = window.open(
-        "",
-        "",
-        "width=700,height=800"
+      step.classList.remove(
+        "active",
+        "completed"
       );
 
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Blight Bank Transfer Receipt</title>
-          <style>
-            body {
-              font-family: Arial, Helvetica, sans-serif;
-              padding: 40px;
-              color: #17253a;
-            }
+      if (index + 1 < activeStep) {
 
-            h1 {
-              font-size: 22px;
-              margin-bottom: 25px;
-            }
+        step.classList.add("completed");
 
-            .receipt {
-              border: 1px solid #ddd;
-              border-radius: 10px;
-              overflow: hidden;
-            }
+        step.querySelector(".step-number")
+          .textContent = "✓";
 
-            .receipt-header {
-              background: #102f56;
-              color: white;
-              padding: 18px;
-            }
+      } else if (index + 1 === activeStep) {
 
-            .receipt-header strong {
-              font-size: 18px;
-            }
+        step.classList.add("active");
 
-            .receipt-header span {
-              display: block;
-              margin-top: 5px;
-              font-size: 12px;
-              color: #d5deea;
-            }
+        step.querySelector(".step-number")
+          .textContent = index + 1;
 
-            .receipt-row {
-              display: flex;
-              justify-content: space-between;
-              padding: 14px;
-              border-bottom: 1px solid #eee;
-              font-size: 13px;
-            }
+      } else {
 
-            .receipt-row span:first-child {
-              color: #777;
-            }
+        step.querySelector(".step-number")
+          .textContent = index + 1;
+      }
+    });
+  }
 
-            .receipt-row span:last-child {
-              font-weight: 700;
-            }
-          </style>
-        </head>
-        <body>
-          <h1>Transfer Receipt</h1>
-          <div class="receipt">
-            ${receipt}
-          </div>
-        </body>
-        </html>
-      `);
+  function formatCurrency(amount) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD"
+    }).format(amount);
+  }
 
-      printWindow.document.close();
-      printWindow.focus();
+  function printReceipt() {
+    const receipt =
+      document.getElementById("receipt").innerHTML;
 
-      setTimeout(() => {
-        printWindow.print();
-      }, 300);
-    }
+    const printWindow = window.open(
+      "",
+      "",
+      "width=700,height=800"
+    );
 
-    document.getElementById("routingNumber")
-      .addEventListener("input", function() {
-        this.value = this.value.replace(/\D/g, "");
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Blight Bank Transfer Receipt</title>
 
-        resetVerification();
-      });
+        <style>
+          body {
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 40px;
+            color: #17253a;
+          }
 
-    document.getElementById("accountNumber")
-      .addEventListener("input", function() {
-        this.value = this.value.replace(/\D/g, "");
+          h1 {
+            font-size: 22px;
+            margin-bottom: 25px;
+          }
 
-        resetVerification();
-      });
+          .receipt {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+          }
 
-    document.getElementById("bank")
-      .addEventListener("change", resetVerification);
+          .receipt-header {
+            background: #102f56;
+            color: white;
+            padding: 18px;
+          }
 
-    document.getElementById("accountType")
-      .addEventListener("change", resetVerification);
+          .receipt-header strong {
+            font-size: 18px;
+          }
 
-    document.getElementById("recipientName")
-      .addEventListener("input", resetVerification);
+          .receipt-header span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #d5deea;
+          }
 
-    document.getElementById("amount")
-      .addEventListener("input", function() {
-        const amount = parseFloat(this.value);
-        const amountError = document.getElementById("amountError");
+          .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+          }
 
-        amountError.style.display = "none";
+          .receipt-row span:first-child {
+            color: #777;
+          }
 
-        if (amount > DAILY_LIMIT) {
-          amountError.textContent =
-            "Daily transfer limit is $25,000.00.";
+          .receipt-row span:last-child {
+            font-weight: 700;
+          }
+        </style>
+      </head>
 
-          amountError.style.display = "block";
-        }
-      });
-  </script>
+      <body>
+        <h1>Transfer Receipt</h1>
+
+        <div class="receipt">
+          ${receipt}
+        </div>
+      </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+
+    setTimeout(() => {
+      printWindow.print();
+    }, 300);
+  }
+
+  document.getElementById("routingNumber")
+    .addEventListener("input", function() {
+      this.value =
+        this.value.replace(/\D/g, "");
+
+      resetVerification();
+    });
+
+  document.getElementById("accountNumber")
+    .addEventListener("input", function() {
+      this.value =
+        this.value.replace(/\D/g, "");
+
+      resetVerification();
+    });
+
+  document.getElementById("bank")
+    .addEventListener("change", resetVerification);
+
+  document.getElementById("accountType")
+    .addEventListener("change", resetVerification);
+
+  document.getElementById("recipientName")
+    .addEventListener("input", resetVerification);
+
+  document.getElementById("amount")
+    .addEventListener("input", function() {
+
+      const amount =
+        parseFloat(this.value);
+
+      const amountError =
+        document.getElementById("amountError");
+
+      amountError.style.display = "none";
+
+      if (amount > DAILY_LIMIT) {
+
+        amountError.textContent =
+          "Daily transfer limit is $25,000.00.";
+
+        amountError.style.display = "block";
+
+      } else if (
+        amount &&
+        amount + TRANSFER_FEE > getBalance()
+      ) {
+
+        amountError.textContent =
+          "Insufficient available balance.";
+
+        amountError.style.display = "block";
+      }
+    });
+
+  updateAvailableBalance();
+</script>
 
 </body>
 </html>
