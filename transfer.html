@@ -339,57 +339,98 @@
     }
 
     /* VERIFY */
+.verify-box {
+  margin-top: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f7f9fc;
+  border: 1px solid #e2e7ee;
+  display: none;
+}
 
-    .verify-box {
-      margin-top: 8px;
-      padding: 18px;
-      border-radius: 11px;
-      background: #f7f9fc;
-      border: 1px solid #e2e7ee;
-      display: none;
-    }
+.verification-title {
+  color: #10233c;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 17px;
+}
 
-    .verify-status {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      font-weight: 600;
-    }
+.verification-trail {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 
-    .status-icon {
-      width: 27px;
-      height: 27px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #e8edf4;
-    }
+.verification-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #8b96a5;
+  font-size: 13px;
+}
 
-    .verify-name {
-      margin-top: 12px;
-      font-size: 15px;
-      font-weight: 700;
-      color: #10233c;
-    }
+.verification-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e8edf3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
 
-    .verify-details {
-      margin-top: 4px;
-      color: #7d8998;
-      font-size: 12px;
-    }
+.verification-step.active {
+  color: #102f56;
+  font-weight: 600;
+}
 
-    .verify-button {
-      margin-top: 12px;
-      border: none;
-      background: #102f56;
-      color: white;
-      padding: 9px 14px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 12px;
-    }
+.verification-step.active .verification-icon {
+  border: 3px solid #dce5ef;
+  border-top-color: #102f56;
+  animation: verificationSpin 0.8s linear infinite;
+}
+
+.verification-step.completed {
+  color: #21864a;
+  font-weight: 600;
+}
+
+.verification-step.completed .verification-icon {
+  background: #e8f5ed;
+  color: #21864a;
+}
+
+@keyframes verificationSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.verified-recipient {
+  display: none;
+  margin-top: 18px;
+  padding: 15px;
+  border-radius: 9px;
+  background: #eef8f1;
+  border: 1px solid #cfe8d7;
+}
+
+.verified-recipient strong {
+  display: block;
+  color: #1d6d3d;
+  font-size: 14px;
+}
+
+.verified-recipient span {
+  display: block;
+  margin-top: 5px;
+  color: #607568;
+  font-size: 12px;
+}
+ 
 
     /* BALANCE */
 
