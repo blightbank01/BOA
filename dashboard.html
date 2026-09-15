@@ -978,7 +978,7 @@ body {
       </div>
 
       <div class="date-time">
-        Monday, September 14, 2026<br>
+        Monday, September 15, 2026<br>
         4:24 PM
       </div>
 
@@ -1281,6 +1281,9 @@ body {
             </button>
 
           </div>
+
+
+          <div id="savedTransactions"></div>
 
 
           <div class="transaction">
@@ -1734,5 +1737,235 @@ function searchTransactions(value) {
   });
 
 }
+
+</script>
+  <script>
+
+const DEFAULT_CHECKING_BALANCE = 2600450.00;
+const SAVINGS_BALANCE = 350.00;
+
+function getCheckingBalance() {
+
+  const saved = parseFloat(
+    localStorage.getItem("blightBankCheckingBalance")
+  );
+
+  return Number.isFinite(saved)
+    ? saved
+    : DEFAULT_CHECKING_BALANCE;
+}
+
+function formatCurrency(amount) {
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD"
+  }).format(amount);
+
+}
+
+function openTransfer() {
+
+  window.location.href = "transfer.html";
+
+}
+
+function contactSupport() {
+
+  alert(
+    "Blight Bank Support\n\n" +
+    "Phone: +19162334022\n" +
+    "Email: blightbank@gmail.com"
+  );
+
+}
+
+function getTransactions() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem("blightBankTransactions")
+    ) || [];
+
+  } catch {
+
+    return [];
+
+  }
+
+}
+
+function updateBalances() {
+
+  const checkingBalance =
+    getCheckingBalance();
+
+  const totalBalance =
+    checkingBalance + SAVINGS_BALANCE;
+
+  const totalElement =
+    document.querySelector(".total-amount");
+
+  if (totalElement) {
+    totalElement.textContent =
+      formatCurrency(totalBalance);
+  }
+
+  const checkingElement =
+    document.querySelectorAll(".account-balance")[0];
+
+  if (checkingElement) {
+    checkingElement.textContent =
+      formatCurrency(checkingBalance);
+  }
+
+  const summaryBalances =
+    document.querySelectorAll(
+      ".right-column .account-top > strong"
+    );
+
+  if (summaryBalances[0]) {
+
+    summaryBalances[0].textContent =
+      formatCurrency(checkingBalance);
+
+  }
+
+  if (summaryBalances[1]) {
+
+    summaryBalances[1].textContent =
+      formatCurrency(SAVINGS_BALANCE);
+
+  }
+
+}
+
+function formatTransactionDate(dateString) {
+
+  const date =
+    new Date(dateString);
+
+  return date.toLocaleDateString(
+    "en-US",
+    {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    }
+  );
+
+}
+
+function formatTransactionTime(dateString) {
+
+  const date =
+    new Date(dateString);
+
+  return date.toLocaleTimeString(
+    "en-US",
+    {
+      hour: "numeric",
+      minute: "2-digit"
+    }
+  );
+
+}
+
+function renderSavedTransactions() {
+
+  const container =
+    document.getElementById(
+      "savedTransactions"
+    );
+
+  if (!container) {
+    return;
+  }
+
+  const transactions =
+    getTransactions();
+
+  container.innerHTML = "";
+
+  transactions.forEach(transaction => {
+
+    const row =
+      document.createElement("div");
+
+    row.className = "transaction";
+
+    row.innerHTML = `
+      <div>
+        <div class="transaction-name">
+          Transfer to ${escapeHtml(transaction.recipient)}
+        </div>
+
+        <div class="transaction-sub">
+          ${formatTransactionDate(transaction.date)}
+          •
+          ${formatTransactionTime(transaction.date)}
+          •
+          ${escapeHtml(transaction.bank)}
+          •••• ${escapeHtml(transaction.accountLast4)}
+        </div>
+      </div>
+
+      <div class="transaction-type">
+        ${escapeHtml(transaction.type)}
+      </div>
+
+      <div class="transaction-amount negative">
+        -${formatCurrency(transaction.total)}
+      </div>
+
+      <div class="completed">
+        ${escapeHtml(transaction.status)}
+      </div>
+    `;
+
+    container.appendChild(row);
+
+  });
+
+}
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+function searchTransactions(value) {
+
+  const transactions =
+    document.querySelectorAll(
+      ".transaction"
+    );
+
+  value =
+    value.toLowerCase();
+
+  transactions.forEach(function(transaction) {
+
+    const text =
+      transaction.innerText.toLowerCase();
+
+    transaction.style.display =
+      text.includes(value)
+        ? "grid"
+        : "none";
+
+  });
+
+}
+
+updateBalances();
+renderSavedTransactions();
 
 </script>
