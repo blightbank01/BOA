@@ -1304,7 +1304,94 @@
     ) || 0;
   }
 
-  function verifyRecipient() {
+function verifyRecipient() {
+
+  const bank = document.getElementById("bank").value;
+  const accountType = document.getElementById("accountType").value;
+  const routing = document.getElementById("routingNumber").value.trim();
+  const account = document.getElementById("accountNumber").value.trim();
+  const name = document.getElementById("recipientName").value.trim();
+
+  if (
+    !bank ||
+    !accountType ||
+    !/^\d{9}$/.test(routing) ||
+    !/^\d{4,17}$/.test(account) ||
+    !name
+  ) {
+    showToast("Please enter valid recipient information.");
+    return;
+  }
+
+  const button = document.getElementById("verifyButton");
+  const box = document.getElementById("verifyBox");
+
+  button.disabled = true;
+  button.textContent = "Verifying...";
+
+  box.style.display = "block";
+
+  recipientVerified = false;
+
+  const steps = [
+    document.getElementById("verifyStep1"),
+    document.getElementById("verifyStep2"),
+    document.getElementById("verifyStep3"),
+    document.getElementById("verifyStep4")
+  ];
+
+  steps.forEach(step => {
+    step.classList.remove("active", "completed");
+  });
+
+  document.getElementById("verifiedRecipient").style.display = "none";
+
+  let currentStep = 0;
+
+  function runVerificationStep() {
+
+    if (currentStep > 0) {
+      steps[currentStep - 1].classList.remove("active");
+      steps[currentStep - 1].classList.add("completed");
+      steps[currentStep - 1].querySelector(".verification-icon").textContent = "✓";
+    }
+
+    if (currentStep < steps.length) {
+
+      steps[currentStep].classList.add("active");
+
+      currentStep++;
+
+      setTimeout(runVerificationStep, 900);
+
+    } else {
+
+      setTimeout(() => {
+
+        recipientVerified = true;
+
+        document.getElementById("verifiedRecipient").style.display = "block";
+
+        document.getElementById("verifiedRecipientDetails").textContent =
+          name.toUpperCase() +
+          " • " +
+          bank +
+          " • " +
+          accountType +
+          " • Account ending " +
+          account.slice(-4);
+
+        button.textContent = "Recipient Verified";
+        button.disabled = true;
+
+        showToast("Recipient verified successfully.");
+
+      }, 500);
+    }
+  }
+
+  runVerificationStep();
+} {
 
     const bank = document.getElementById("bank").value;
     const accountType = document.getElementById("accountType").value;
