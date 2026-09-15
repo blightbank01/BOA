@@ -1363,7 +1363,7 @@
 <script>
 
   const availableBalance = 2600450.00;
-  const transferFee = 2.50;
+  const transferFee = 4.50;
   const dailyTransferLimit = 25000.00;
 
   let recipientVerified = false;
@@ -1727,6 +1727,77 @@ function verifyRecipient() {
   }
 
   function processTransfer() {
+
+  const otp = document.getElementById("otp").value.trim();
+
+  if (!/^\d{6}$/.test(otp)) {
+    document.getElementById("otpError").style.display = "block";
+    showToast("Enter the 6-digit verification code.");
+    return;
+  }
+
+  document.getElementById("otpError").style.display = "none";
+
+  document.getElementById("otpStep").style.display = "none";
+  document.getElementById("processingStep").style.display = "block";
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  const steps = [
+    document.getElementById("processStep1"),
+    document.getElementById("processStep2"),
+    document.getElementById("processStep3"),
+    document.getElementById("processStep4")
+  ];
+
+  steps.forEach(step => {
+    step.classList.remove("active", "completed");
+  });
+
+  let currentStep = 0;
+
+  function runProcessingStep() {
+
+    if (currentStep > 0) {
+      steps[currentStep - 1].classList.remove("active");
+      steps[currentStep - 1].classList.add("completed");
+      steps[currentStep - 1]
+        .querySelector(".processing-dot")
+        .textContent = "✓";
+    }
+
+    if (currentStep < steps.length) {
+
+      steps[currentStep].classList.add("active");
+
+      currentStep++;
+
+      setTimeout(runProcessingStep, 1100);
+
+    } else {
+
+      setTimeout(() => {
+
+        document.getElementById("processingStep").style.display = "none";
+        document.getElementById("successStep").style.display = "block";
+
+        const reference =
+          "BL" + Date.now().toString().slice(-10);
+
+        document.getElementById("confirmationNumber").textContent =
+          reference;
+
+        showToast("Transfer completed successfully.");
+
+      }, 600);
+    }
+  }
+
+  runProcessingStep();
+}
 
     const otp = document.getElementById("otp").value.trim();
 
