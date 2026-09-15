@@ -3,257 +3,179 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transfer Money | Blight Bank</title>
+  <title>Transfer Money | BLIGHT BANK</title>
 
   <style>
-    .processing {
-  text-align: center;
-  padding: 45px 20px;
-  display: none;
-}
-
-.processing-icon {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  border: 4px solid #e3e8ee;
-  border-top-color: #102f56;
-  animation: processingSpin 0.8s linear infinite;
-  margin: 0 auto 22px;
-}
-
-@keyframes processingSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.processing h2 {
-  color: #10233c;
-  margin-bottom: 8px;
-}
-
-.processing > p {
-  color: #7a8697;
-  font-size: 13px;
-  margin-bottom: 28px;
-}
-
-.processing-trail {
-  max-width: 420px;
-  margin: 0 auto;
-  text-align: left;
-}
-
-.processing-step {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 0;
-  color: #8b96a5;
-  font-size: 13px;
-}
-
-.processing-step .processing-dot {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #e8edf3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 11px;
-}
-
-.processing-step.active {
-  color: #102f56;
-  font-weight: 600;
-}
-
-.processing-step.completed {
-  color: #21864a;
-  font-weight: 600;
-}
-
-.processing-step.completed .processing-dot {
-  background: #e8f5ed;
-  color: #21864a;
-}
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
-      background: #f4f7fb;
-      color: #172033;
-    }
-
-    .layout {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f9;
+      color: #17253a;
       min-height: 100vh;
-      display: flex;
     }
 
-    /* SIDEBAR */
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
 
     .sidebar {
-      width: 270px;
-      background: #071525;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 100vh;
+      background: #0d1b2f;
       color: white;
       padding: 28px 18px;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      overflow-y: auto;
-    }
-
-    .brand {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 12px 35px;
+      flex-direction: column;
+      z-index: 10;
     }
 
-    .brand-mark {
+    .logo {
+      padding: 0 14px 28px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      margin-bottom: 24px;
+    }
+
+    .logo-mark {
       width: 42px;
       height: 42px;
-      border: 2px solid #c9a227;
       border-radius: 10px;
+      background: #c99a3b;
+      color: #0d1b2f;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 21px;
+      font-size: 23px;
       font-weight: 800;
-      color: #c9a227;
+      margin-bottom: 10px;
     }
 
-    .brand-text strong {
-      display: block;
-      font-size: 18px;
-      letter-spacing: 1px;
+    .logo h1 {
+      font-size: 22px;
+      letter-spacing: 1.5px;
     }
 
-    .brand-text span {
-      display: block;
-      color: #9aa7b8;
-      font-size: 9px;
-      margin-top: 3px;
-      letter-spacing: 1px;
-    }
-
-    .nav-title {
-      color: #68778b;
+    .logo p {
+      color: #9daabc;
       font-size: 11px;
-      font-weight: 700;
-      padding: 0 12px 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      margin-top: 5px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
     }
 
     .nav a {
+      text-decoration: none;
+      color: #aeb9c9;
+      padding: 13px 14px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
-      gap: 13px;
-      padding: 13px 12px;
-      margin-bottom: 5px;
-      color: #c5cfdb;
-      text-decoration: none;
-      border-radius: 9px;
+      gap: 12px;
       font-size: 14px;
-      transition: 0.2s;
+      transition: .2s;
     }
 
     .nav a:hover,
     .nav a.active {
-      background: #102b49;
-      color: white;
-    }
-
-    .nav a.active {
-      border-left: 3px solid #c9a227;
+      background: #c99a3b;
+      color: #0d1b2f;
+      font-weight: 700;
     }
 
     .support-box {
-      margin-top: 30px;
-      padding: 17px;
+      margin-top: auto;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.07);
+      padding: 16px;
       border-radius: 12px;
-      background: #0d2239;
     }
 
-    .support-box strong {
-      display: block;
+    .support-box h3 {
       font-size: 13px;
       margin-bottom: 7px;
     }
 
     .support-box p {
-      color: #8f9dae;
-      font-size: 12px;
+      color: #9daabc;
+      font-size: 11px;
       line-height: 1.5;
       margin-bottom: 12px;
     }
 
     .support-box button {
       width: 100%;
-      padding: 9px;
-      border: 1px solid #344b63;
+      border: 0;
       border-radius: 7px;
-      background: transparent;
-      color: white;
-      cursor: pointer;
+      padding: 9px;
+      background: #c99a3b;
+      color: #0d1b2f;
+      font-weight: 700;
+      font-size: 12px;
     }
-
-    .logout {
-      margin-top: 15px;
-      display: block;
-      padding: 12px;
-      color: #aab5c3;
-      text-decoration: none;
-      font-size: 13px;
-    }
-
-    /* MAIN */
 
     .main {
-      margin-left: 270px;
-      width: calc(100% - 270px);
+      margin-left: 250px;
       min-height: 100vh;
     }
 
     .topbar {
       height: 76px;
       background: white;
-      border-bottom: 1px solid #e5eaf0;
+      border-bottom: 1px solid #e4e8ee;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 40px;
+      padding: 0 34px;
     }
 
-    .page-title small {
-      color: #7b8797;
-      font-size: 12px;
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
-    .page-title h1 {
-      font-size: 23px;
+    .back-btn {
+      border: 0;
+      background: #f1f4f7;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      font-size: 18px;
+      color: #17253a;
+    }
+
+    .topbar h2 {
+      font-size: 20px;
       color: #10233c;
-      margin-top: 4px;
     }
 
     .profile {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .profile-avatar {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: #102f56;
       color: white;
@@ -261,51 +183,68 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
-    }
-
-    .profile-text strong {
-      display: block;
       font-size: 13px;
     }
 
-    .profile-text span {
-      color: #8b96a5;
+    .profile-info strong {
+      display: block;
+      font-size: 13px;
+      color: #18263b;
+    }
+
+    .profile-info span {
+      display: block;
       font-size: 11px;
+      color: #8a96a5;
+      margin-top: 2px;
     }
 
     .content {
-      max-width: 1050px;
-      margin: 35px auto;
-      padding: 0 30px 50px;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px;
     }
 
-    /* PROGRESS */
+    .page-heading {
+      margin-bottom: 24px;
+    }
+
+    .page-heading h1 {
+      font-size: 28px;
+      color: #10233c;
+      margin-bottom: 7px;
+    }
+
+    .page-heading p {
+      color: #7d8998;
+      font-size: 14px;
+    }
 
     .steps {
       display: flex;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
+      max-width: 720px;
     }
 
     .step {
       display: flex;
       align-items: center;
       gap: 9px;
-      color: #8b96a5;
-      font-size: 13px;
+      color: #98a3b0;
+      font-size: 12px;
       font-weight: 600;
     }
 
     .step-number {
-      width: 31px;
-      height: 31px;
+      width: 29px;
+      height: 29px;
       border-radius: 50%;
       background: #e5eaf0;
-      color: #657184;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 12px;
     }
 
     .step.active {
@@ -317,269 +256,307 @@
       color: white;
     }
 
+    .step.completed {
+      color: #21864a;
+    }
+
     .step.completed .step-number {
-      background: #c9a227;
+      background: #21864a;
       color: white;
     }
 
     .step-line {
-      width: 70px;
+      flex: 1;
       height: 1px;
-      background: #dce2e9;
+      background: #dce2e8;
       margin: 0 12px;
     }
 
-    /* CARD */
-
     .card {
       background: white;
-      border: 1px solid #e4e9ef;
-      border-radius: 16px;
-      box-shadow: 0 12px 35px rgba(16, 35, 60, 0.06);
-      padding: 30px;
+      border: 1px solid #e5e9ee;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(16,35,60,.04);
     }
 
-    .card-header {
+    .transfer-card {
+      padding: 28px;
+      max-width: 820px;
+    }
+
+    .card-title {
       margin-bottom: 25px;
     }
 
-    .card-header h2 {
-      font-size: 20px;
+    .card-title h2 {
+      font-size: 19px;
       color: #10233c;
-      margin-bottom: 7px;
+      margin-bottom: 5px;
     }
 
-    .card-header p {
-      color: #7a8697;
+    .card-title p {
+      color: #8a95a3;
       font-size: 13px;
     }
 
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 18px;
     }
 
     .form-group {
-      margin-bottom: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
     }
 
     .form-group.full {
       grid-column: 1 / -1;
     }
 
-    label {
-      display: block;
-      color: #273447;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 8px;
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #46566b;
     }
 
-    input,
-    select {
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
       width: 100%;
-      height: 48px;
-      border: 1px solid #d5dce5;
-      border-radius: 8px;
-      padding: 0 14px;
-      font-size: 14px;
-      color: #1c2737;
+      border: 1px solid #dce2e8;
+      border-radius: 9px;
+      padding: 13px 14px;
       background: white;
+      color: #18263b;
       outline: none;
+      transition: .2s;
     }
 
-    input:focus,
-    select:focus {
+    .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
       border-color: #102f56;
-      box-shadow: 0 0 0 3px rgba(16, 47, 86, 0.08);
+      box-shadow: 0 0 0 3px rgba(16,47,86,.08);
     }
 
-    .input-error {
-      border-color: #c0392b !important;
-    }
-
-    .error-text {
-      color: #c0392b;
+    .form-help {
+      color: #8995a4;
       font-size: 11px;
+    }
+
+    .verify-btn {
       margin-top: 6px;
+      border: 0;
+      background: #102f56;
+      color: white;
+      padding: 11px 17px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      align-self: flex-start;
+    }
+
+    .verify-btn:hover {
+      background: #173f6e;
+    }
+
+    .verify-box {
+      margin-top: 15px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #f7f9fc;
+      border: 1px solid #e2e7ee;
       display: none;
     }
 
-    .help-text {
-      color: #8994a3;
-      font-size: 11px;
-      margin-top: 6px;
+    .verification-title {
+      color: #10233c;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 17px;
     }
 
-    /* VERIFY */
-.verify-box {
-  margin-top: 15px;
-  padding: 20px;
-  border-radius: 12px;
-  background: #f7f9fc;
-  border: 1px solid #e2e7ee;
-  display: none;
-}
+    .verification-trail {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-.verification-title {
-  color: #10233c;
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 17px;
-}
-
-.verification-trail {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.verification-step {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #8b96a5;
-  font-size: 13px;
-}
-
-.verification-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #e8edf3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.verification-step.active {
-  color: #102f56;
-  font-weight: 600;
-}
-
-.verification-step.active .verification-icon {
-  border: 3px solid #dce5ef;
-  border-top-color: #102f56;
-  animation: verificationSpin 0.8s linear infinite;
-}
-
-.verification-step.completed {
-  color: #21864a;
-  font-weight: 600;
-}
-
-.verification-step.completed .verification-icon {
-  background: #e8f5ed;
-  color: #21864a;
-}
-
-@keyframes verificationSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.verified-recipient {
-  display: none;
-  margin-top: 18px;
-  padding: 15px;
-  border-radius: 9px;
-  background: #eef8f1;
-  border: 1px solid #cfe8d7;
-}
-
-.verified-recipient strong {
-  display: block;
-  color: #1d6d3d;
-  font-size: 14px;
-}
-
-.verified-recipient span {
-  display: block;
-  margin-top: 5px;
-  color: #607568;
-  font-size: 12px;
-}
- 
-
-    /* BALANCE */
-
-    .balance-box {
-      margin-top: 25px;
-      padding: 17px;
-      border-radius: 11px;
-      background: #f7f9fc;
-      border: 1px solid #e1e6ed;
+    .verification-step {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 12px;
+      color: #8b96a5;
+      font-size: 13px;
     }
 
-    .balance-box span {
-      color: #7a8697;
+    .verification-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #e8edf3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .verification-step.active {
+      color: #102f56;
+      font-weight: 600;
+    }
+
+    .verification-step.active .verification-icon {
+      border: 3px solid #dce5ef;
+      border-top-color: #102f56;
+      animation: verificationSpin 0.8s linear infinite;
+    }
+
+    .verification-step.completed {
+      color: #21864a;
+      font-weight: 600;
+    }
+
+    .verification-step.completed .verification-icon {
+      background: #e8f5ed;
+      color: #21864a;
+    }
+
+    @keyframes verificationSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .verified-recipient {
+      display: none;
+      margin-top: 18px;
+      padding: 15px;
+      border-radius: 9px;
+      background: #eef8f1;
+      border: 1px solid #cfe8d7;
+    }
+
+    .verified-recipient strong {
+      display: block;
+      color: #1d6d3d;
+      font-size: 14px;
+    }
+
+    .verified-recipient span {
+      display: block;
+      margin-top: 5px;
+      color: #607568;
       font-size: 12px;
     }
 
-    .balance-box strong {
-      color: #10233c;
-      font-size: 18px;
+    .amount-box {
+      position: relative;
     }
 
-    /* ACTIONS */
+    .amount-box span {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: 700;
+      color: #536175;
+      pointer-events: none;
+    }
 
-    .actions {
-      margin-top: 28px;
+    .amount-box input {
+      padding-left: 30px;
+    }
+
+    .balance-info {
+      margin-top: 5px;
       display: flex;
       justify-content: space-between;
-      gap: 15px;
+      color: #8792a1;
+      font-size: 11px;
     }
 
-    .btn {
-      min-width: 150px;
-      height: 47px;
-      padding: 0 22px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
+    .balance-info strong {
+      color: #102f56;
     }
 
-    .btn-secondary {
-      background: white;
-      border: 1px solid #cfd7e1;
-      color: #354257;
+    .primary-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 9px;
+      padding: 14px;
+      background: #c99a3b;
+      color: #10233c;
+      font-weight: 800;
+      margin-top: 23px;
+      transition: .2s;
     }
 
-    .btn-primary {
-      border: none;
-      background: #102f56;
-      color: white;
+    .primary-btn:hover {
+      background: #b98b2f;
     }
 
-    .btn-primary:hover {
-      background: #173c68;
-    }
-
-    .btn-primary:disabled {
-      background: #9ca8b7;
+    .primary-btn:disabled {
+      opacity: .5;
       cursor: not-allowed;
     }
 
-    /* REVIEW */
+    .secondary-btn {
+      border: 1px solid #d9e0e7;
+      background: white;
+      color: #314158;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+    }
 
-    #reviewStep,
-    #otpStep,
-    #successStep {
+    .secondary-btn:hover {
+      background: #f6f8fa;
+    }
+
+    .review-card,
+    .otp-card,
+    .processing-card,
+    .success-card {
       display: none;
+      max-width: 820px;
+      padding: 30px;
+    }
+
+    .review-title,
+    .otp-title,
+    .success-title {
+      margin-bottom: 22px;
+    }
+
+    .review-title h2,
+    .otp-title h2,
+    .success-title h2 {
+      color: #10233c;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .review-title p,
+    .otp-title p,
+    .success-title p {
+      color: #8792a1;
+      font-size: 13px;
     }
 
     .review-list {
-      border: 1px solid #e2e7ee;
-      border-radius: 12px;
+      border: 1px solid #e2e7ed;
+      border-radius: 11px;
       overflow: hidden;
     }
 
@@ -587,88 +564,74 @@
       display: flex;
       justify-content: space-between;
       gap: 20px;
-      padding: 17px;
-      border-bottom: 1px solid #edf0f4;
+      padding: 14px 16px;
+      border-bottom: 1px solid #edf0f3;
       font-size: 13px;
     }
 
     .review-row:last-child {
-      border-bottom: none;
+      border-bottom: 0;
     }
 
-    .review-row span {
-      color: #7c8796;
+    .review-row span:first-child {
+      color: #7c8998;
     }
 
-    .review-row strong {
-      color: #182438;
+    .review-row span:last-child {
+      color: #17253a;
+      font-weight: 700;
       text-align: right;
     }
 
-    .total-row {
-      background: #f7f9fc;
+    .review-total {
+      background: #f7f9fb;
+      font-size: 14px;
     }
 
-    .total-row strong {
-      font-size: 18px;
+    .review-total span:last-child {
       color: #102f56;
     }
 
-    /* OTP */
-
-    .otp-box {
-      text-align: center;
-      max-width: 450px;
-      margin: auto;
-    }
-
-    .lock-icon {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: #edf2f7;
+    .action-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 25px;
-    }
-
-    .otp-box h2 {
-      color: #10233c;
-      margin-bottom: 10px;
-    }
-
-    .otp-box p {
-      color: #7a8697;
-      line-height: 1.6;
-      font-size: 13px;
-      margin-bottom: 25px;
+      gap: 12px;
+      margin-top: 22px;
     }
 
     .otp-input {
+      width: 100%;
+      max-width: 300px;
+      padding: 16px;
       text-align: center;
-      letter-spacing: 9px;
+      letter-spacing: 7px;
       font-size: 22px;
-      font-weight: 700;
+      border: 1px solid #dce2e8;
+      border-radius: 9px;
+      outline: none;
     }
 
-    /* PROCESSING */
+    .otp-input:focus {
+      border-color: #102f56;
+    }
 
-    .processing {
+    .otp-note {
+      margin-top: 12px;
+      color: #8995a4;
+      font-size: 12px;
+    }
+
+    .processing-card {
       text-align: center;
-      padding: 50px 20px;
-      display: none;
     }
 
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid #e4e9ef;
-      border-top-color: #102f56;
+    .processing-icon {
+      width: 55px;
+      height: 55px;
+      margin: 0 auto 18px;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 22px;
+      border: 4px solid #e1e7ee;
+      border-top-color: #102f56;
+      animation: spin 1s linear infinite;
     }
 
     @keyframes spin {
@@ -677,58 +640,132 @@
       }
     }
 
-    .processing h2 {
+    .processing-card h2 {
       color: #10233c;
-      margin-bottom: 8px;
+      font-size: 20px;
+      margin-bottom: 7px;
     }
 
-    .processing p {
-      color: #7a8697;
+    .processing-card p {
+      color: #8995a4;
       font-size: 13px;
     }
 
-    /* SUCCESS */
+    .processing-trail {
+      margin: 28px auto 0;
+      max-width: 420px;
+      text-align: left;
+    }
 
-    .success {
+    .processing-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 0;
+      color: #9aa4b1;
+      font-size: 13px;
+      border-bottom: 1px solid #edf0f3;
+    }
+
+    .processing-item:last-child {
+      border-bottom: 0;
+    }
+
+    .processing-item .trail-icon {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #e8edf3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .processing-item.active {
+      color: #102f56;
+      font-weight: 700;
+    }
+
+    .processing-item.active .trail-icon {
+      border: 3px solid #dce5ef;
+      border-top-color: #102f56;
+      animation: spin .8s linear infinite;
+    }
+
+    .processing-item.completed {
+      color: #21864a;
+      font-weight: 700;
+    }
+
+    .processing-item.completed .trail-icon {
+      background: #e8f5ed;
+      color: #21864a;
+    }
+
+    .success-card {
       text-align: center;
-      padding: 25px;
     }
 
     .success-icon {
       width: 68px;
       height: 68px;
+      margin: 0 auto 18px;
       border-radius: 50%;
       background: #e8f5ed;
       color: #21864a;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 32px;
+      font-size: 30px;
+      font-weight: 800;
     }
 
-    .success h2 {
-      color: #10233c;
-      margin-bottom: 8px;
+    .receipt {
+      margin: 24px auto 0;
+      max-width: 500px;
+      border: 1px solid #e1e6ec;
+      border-radius: 11px;
+      text-align: left;
+      overflow: hidden;
     }
 
-    .success p {
-      color: #7a8697;
-      font-size: 13px;
-      line-height: 1.6;
+    .receipt-header {
+      background: #102f56;
+      color: white;
+      padding: 16px;
     }
 
-    .reference {
-      margin: 20px auto;
-      padding: 13px;
-      background: #f7f9fc;
-      border-radius: 8px;
-      max-width: 360px;
-      color: #445166;
+    .receipt-header strong {
+      font-size: 15px;
+    }
+
+    .receipt-header span {
+      display: block;
+      color: #b9c7d8;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 15px;
+      border-bottom: 1px solid #edf0f3;
       font-size: 12px;
     }
 
-    /* TOAST */
+    .receipt-row span:first-child {
+      color: #84909f;
+    }
+
+    .receipt-row span:last-child {
+      font-weight: 700;
+      color: #17253a;
+      text-align: right;
+    }
 
     .toast {
       position: fixed;
@@ -737,42 +774,64 @@
       background: #10233c;
       color: white;
       padding: 14px 18px;
-      border-radius: 8px;
+      border-radius: 9px;
       font-size: 13px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
-      transform: translateY(100px);
-      opacity: 0;
-      pointer-events: none;
-      transition: 0.3s;
-      z-index: 1000;
+      box-shadow: 0 8px 30px rgba(0,0,0,.18);
+      display: none;
+      z-index: 100;
     }
 
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .footer-note {
-      text-align: center;
-      margin-top: 18px;
-      color: #9aa4b2;
+    .error-message {
+      display: none;
+      margin-top: 6px;
+      color: #bd3b3b;
       font-size: 11px;
     }
 
-    /* MOBILE */
-
-    @media (max-width: 850px) {
+    @media (max-width: 900px) {
       .sidebar {
-        width: 220px;
+        width: 210px;
       }
 
       .main {
-        margin-left: 220px;
-        width: calc(100% - 220px);
+        margin-left: 210px;
+      }
+
+      .content {
+        padding: 24px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .logo {
+        margin-bottom: 15px;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .support-box {
+        margin-top: 18px;
+      }
+
+      .main {
+        margin-left: 0;
       }
 
       .topbar {
-        padding: 0 22px;
+        padding: 0 18px;
+      }
+
+      .content {
+        padding: 18px;
       }
 
       .form-grid {
@@ -782,54 +841,17 @@
       .form-group.full {
         grid-column: auto;
       }
-    }
-
-    @media (max-width: 650px) {
-      .sidebar {
-        display: none;
-      }
-
-      .main {
-        margin-left: 0;
-        width: 100%;
-      }
-
-      .topbar {
-        height: 70px;
-      }
-
-      .profile-text {
-        display: none;
-      }
-
-      .content {
-        margin-top: 25px;
-        padding: 0 15px 40px;
-      }
-
-      .card {
-        padding: 22px;
-      }
 
       .steps {
-        justify-content: flex-start;
-        overflow-x: auto;
+        width: 100%;
       }
 
       .step-line {
-        width: 30px;
+        margin: 0 6px;
       }
 
-      .step {
-        white-space: nowrap;
-      }
-
-      .actions {
-        flex-direction: column-reverse;
-      }
-
-      .btn {
-        width: 100%;
+      .profile-info {
+        display: none;
       }
     }
   </style>
@@ -837,120 +859,104 @@
 
 <body>
 
-<div class="layout">
-
   <aside class="sidebar">
-
-    <div class="brand">
-      <div class="brand-mark">B</div>
-
-      <div class="brand-text">
-        <strong>BLIGHT BANK</strong>
-        <span>YOUR FUTURE. OUR PRIORITY.</span>
-      </div>
+    <div class="logo">
+      <div class="logo-mark">B</div>
+      <h1>BLIGHT BANK</h1>
+      <p>Your Future. Our Priority.</p>
     </div>
-
-    <div class="nav-title">Banking</div>
 
     <nav class="nav">
       <a href="dashboard.html">⌂ <span>Dashboard</span></a>
       <a href="transfer.html" class="active">⇄ <span>Transfer Money</span></a>
-      <a href="#">▣ <span>Cards</span></a>
-      <a href="#">↔ <span>Transactions</span></a>
-      <a href="#">◈ <span>Savings</span></a>
-      <a href="#">▤ <span>Bills & Payments</span></a>
-      <a href="#">$ <span>Loans</span></a>
-      <a href="#">⚙ <span>Settings</span></a>
-      <a href="#">♙ <span>Security</span></a>
-      <a href="#">? <span>Help & Support</span></a>
+      <a href="dashboard.html">▣ <span>Cards</span></a>
+      <a href="dashboard.html">◷ <span>Transactions</span></a>
+      <a href="dashboard.html">◉ <span>Savings</span></a>
+      <a href="dashboard.html">▤ <span>Bills & Payments</span></a>
+      <a href="dashboard.html">◇ <span>Loans</span></a>
+      <a href="dashboard.html">⚙ <span>Settings</span></a>
+      <a href="dashboard.html">◈ <span>Security</span></a>
+      <a href="dashboard.html">? <span>Help & Support</span></a>
     </nav>
 
     <div class="support-box">
-      <strong>Need assistance?</strong>
-      <p>Our support team is available to help with your account and transfers.</p>
-      <button onclick="contactSupport()">Contact Support</button>
+      <h3>Need help?</h3>
+      <p>Our support team is available to assist you with your account.</p>
+      <button type="button" onclick="contactSupport()">Contact Support</button>
     </div>
-
-    <a href="login.html" class="logout">↪ Log out</a>
-
   </aside>
 
   <main class="main">
 
     <header class="topbar">
-
-      <div class="page-title">
-        <small>Banking</small>
-        <h1>Transfer Money</h1>
+      <div class="topbar-left">
+        <button type="button" class="back-btn" onclick="window.location.href='dashboard.html'">←</button>
+        <h2>Transfer Money</h2>
       </div>
 
       <div class="profile">
         <div class="profile-avatar">JW</div>
-
-        <div class="profile-text">
+        <div class="profile-info">
           <strong>John Wyatt</strong>
           <span>Personal Account</span>
         </div>
       </div>
-
     </header>
 
-    <div class="content">
+    <section class="content">
 
-      <!-- STEPS -->
-
-      <div class="steps">
-
-        <div class="step active" id="stepIndicator1">
-          <div class="step-number">1</div>
-          Recipient
-        </div>
-
-        <div class="step-line"></div>
-
-        <div class="step" id="stepIndicator2">
-          <div class="step-number">2</div>
-          Review
-        </div>
-
-        <div class="step-line"></div>
-
-        <div class="step" id="stepIndicator3">
-          <div class="step-number">3</div>
-          Confirmation
-        </div>
-
+      <div class="page-heading">
+        <h1>Transfer Money</h1>
+        <p>Send money securely from your checking account.</p>
       </div>
 
-      <!-- RECIPIENT STEP -->
+      <div class="steps">
+        <div class="step active" id="step1">
+          <div class="step-number">1</div>
+          <span>Recipient</span>
+        </div>
 
-      <section class="card" id="recipientStep">
+        <div class="step-line"></div>
 
-        <div class="card-header">
-          <h2>Transfer money</h2>
-          <p>Enter the recipient's U.S. bank information and transfer amount.</p>
+        <div class="step" id="step2">
+          <div class="step-number">2</div>
+          <span>Review</span>
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step" id="step3">
+          <div class="step-number">3</div>
+          <span>Confirmation</span>
+        </div>
+      </div>
+
+      <!-- RECIPIENT -->
+      <section class="card transfer-card" id="recipientStep">
+
+        <div class="card-title">
+          <h2>Recipient Details</h2>
+          <p>Enter the U.S. bank account information for the recipient.</p>
         </div>
 
         <div class="form-grid">
 
-          <div class="form-group">
+          <div class="form-group full">
             <label for="bank">Recipient Bank</label>
 
             <select id="bank">
               <option value="">Select bank</option>
-              <option>Chase Bank</option>
+              <option>JPMorgan Chase Bank</option>
               <option>Bank of America</option>
-              <option>Wells Fargo</option>
+              <option>Wells Fargo Bank</option>
               <option>Citibank</option>
               <option>U.S. Bank</option>
               <option>Capital One</option>
               <option>PNC Bank</option>
+              <option>Truist Bank</option>
+              <option>TD Bank</option>
               <option>Other U.S. Bank</option>
             </select>
-
-            <div class="error-text" id="bankError">
-              Select a bank.
-            </div>
           </div>
 
           <div class="form-group">
@@ -961,10 +967,6 @@
               <option>Checking</option>
               <option>Savings</option>
             </select>
-
-            <div class="error-text" id="accountTypeError">
-              Select an account type.
-            </div>
           </div>
 
           <div class="form-group">
@@ -973,17 +975,13 @@
             <input
               type="text"
               id="routingNumber"
-              maxlength="9"
               inputmode="numeric"
+              maxlength="9"
               placeholder="9-digit routing number"
             >
 
-            <div class="help-text">
-              Enter the recipient bank's 9-digit routing number.
-            </div>
-
-            <div class="error-text" id="routingError">
-              Enter a valid 9-digit routing number.
+            <div class="form-help">
+              Enter the recipient's 9-digit U.S. routing number.
             </div>
           </div>
 
@@ -991,993 +989,895 @@
             <label for="accountNumber">Account Number</label>
 
             <input
-              type="password"
+              type="text"
               id="accountNumber"
-              maxlength="17"
               inputmode="numeric"
-              placeholder="Enter account number"
+              maxlength="17"
+              placeholder="Account number"
             >
-
-            <div class="help-text">
-              Account numbers may contain up to 17 digits.
-            </div>
-
-            <div class="error-text" id="accountError">
-              Enter a valid account number.
-            </div>
           </div>
 
-          <div class="form-group full">
-
+          <div class="form-group">
             <label for="recipientName">Recipient Name</label>
 
             <input
               type="text"
               id="recipientName"
-              placeholder="Recipient's full legal name"
+              placeholder="Full name on account"
             >
-
-            <div class="help-text">
-              The name returned by account verification will be displayed before the transfer is submitted.
-            </div>
-
-            <div class="error-text" id="nameError">
-              Enter the recipient name.
-            </div>
-
           </div>
 
           <div class="form-group full">
 
             <button
               type="button"
-              class="verify-button"
+              class="verify-btn"
+              id="verifyBtn"
               onclick="verifyRecipient()"
-              id="verifyButton"
             >
               Verify Recipient
             </button>
 
             <div class="verify-box" id="verifyBox">
 
-  <div class="verification-title">
-    Verifying recipient information
-  </div>
+              <div class="verification-title">
+                Verifying recipient information
+              </div>
 
-  <div class="verification-trail">
+              <div class="verification-trail">
 
-    <div class="verification-step" id="verifyStep1">
-      <div class="verification-icon">1</div>
-      <span>Checking bank details</span>
-    </div>
+                <div class="verification-step" id="verificationStep1">
+                  <div class="verification-icon">1</div>
+                  <span>Checking bank information</span>
+                </div>
 
-    <div class="verification-step" id="verifyStep2">
-      <div class="verification-icon">2</div>
-      <span>Checking routing number</span>
-    </div>
+                <div class="verification-step" id="verificationStep2">
+                  <div class="verification-icon">2</div>
+                  <span>Checking routing number</span>
+                </div>
 
-    <div class="verification-step" id="verifyStep3">
-      <div class="verification-icon">3</div>
-      <span>Checking account information</span>
-    </div>
+                <div class="verification-step" id="verificationStep3">
+                  <div class="verification-icon">3</div>
+                  <span>Checking account information</span>
+                </div>
 
-    <div class="verification-step" id="verifyStep4">
-      <div class="verification-icon">4</div>
-      <span>Confirming recipient</span>
-    </div>
+                <div class="verification-step" id="verificationStep4">
+                  <div class="verification-icon">4</div>
+                  <span>Confirming recipient details</span>
+                </div>
 
-  </div>
+              </div>
 
-  <div class="verified-recipient" id="verifiedRecipient">
-    <strong>✓ Recipient verified</strong>
-    <span id="verifiedRecipientDetails"></span>
-  </div>
+              <div class="verified-recipient" id="verifiedRecipient">
+                <strong id="verifiedName">Recipient verified</strong>
+                <span id="verifiedDetails"></span>
+              </div>
 
-          </div>
-
-          <div class="form-group full">
-
-            <label for="amount">Transfer Amount</label>
-
-            <input
-              type="text"
-              id="amount"
-              inputmode="decimal"
-              placeholder="$0.00"
-              oninput="formatAmount(this)"
-            >
-
-            <div class="error-text" id="amountError">
-              Enter a valid transfer amount.
             </div>
 
           </div>
 
           <div class="form-group full">
+            <label for="amount">Transfer Amount</label>
 
+            <div class="amount-box">
+              <span>$</span>
+              <input
+                type="number"
+                id="amount"
+                min="1"
+                step="0.01"
+                placeholder="0.00"
+              >
+            </div>
+
+            <div class="balance-info">
+              <span>Available balance</span>
+              <strong id="availableBalance">$2,600,450.00</strong>
+            </div>
+
+            <div class="error-message" id="amountError"></div>
+          </div>
+
+          <div class="form-group full">
             <label for="note">Transfer Note</label>
 
-            <input
-              type="text"
+            <textarea
               id="note"
-              maxlength="100"
-              placeholder="Optional note"
-            >
-
+              maxlength="150"
+              placeholder="Optional transfer note"
+            ></textarea>
           </div>
 
         </div>
 
-        <div class="balance-box">
-          <div>
-            <span>Available balance</span>
-          </div>
-
-          <strong id="availableBalance">$2,600,450.00</strong>
-        </div>
-
-        <div class="actions">
-
-          <button
-            class="btn btn-secondary"
-            onclick="window.location.href='dashboard.html'"
-          >
-            Cancel
-          </button>
-
-          <button
-            class="btn btn-primary"
-            onclick="goToReview()"
-          >
-            Continue
-          </button>
-
-        </div>
+        <button
+          type="button"
+          class="primary-btn"
+          id="continueBtn"
+          onclick="goToReview()"
+          disabled
+        >
+          Continue to Review
+        </button>
 
       </section>
 
-      <!-- REVIEW STEP -->
 
-      <section class="card" id="reviewStep">
+      <!-- REVIEW -->
+      <section class="card review-card" id="reviewStep">
 
-        <div class="card-header">
-          <h2>Review transfer</h2>
-          <p>Please review the information carefully before continuing.</p>
+        <div class="review-title">
+          <h2>Review Transfer</h2>
+          <p>Review the details carefully before continuing.</p>
         </div>
 
         <div class="review-list">
 
           <div class="review-row">
             <span>Recipient</span>
-            <strong id="reviewRecipient"></strong>
+            <span id="reviewRecipient"></span>
           </div>
 
           <div class="review-row">
             <span>Bank</span>
-            <strong id="reviewBank"></strong>
+            <span id="reviewBank"></span>
           </div>
 
           <div class="review-row">
-            <span>Account</span>
-            <strong id="reviewAccount"></strong>
+            <span>Account Type</span>
+            <span id="reviewAccountType"></span>
           </div>
 
           <div class="review-row">
-            <span>Account type</span>
-            <strong id="reviewType"></strong>
+            <span>Account Number</span>
+            <span id="reviewAccountNumber"></span>
           </div>
 
           <div class="review-row">
-            <span>Transfer amount</span>
-            <strong id="reviewAmount"></strong>
+            <span>Routing Number</span>
+            <span id="reviewRoutingNumber"></span>
           </div>
 
           <div class="review-row">
-            <span>Transfer fee</span>
-            <strong id="reviewFee"></strong>
-          </div>
-
-          <div class="review-row total-row">
-            <span>Total deducted</span>
-            <strong id="reviewTotal"></strong>
+            <span>Transfer Amount</span>
+            <span id="reviewAmount"></span>
           </div>
 
           <div class="review-row">
-            <span>Transfer note</span>
-            <strong id="reviewNote">None</strong>
+            <span>Transfer Fee</span>
+            <span id="reviewFee"></span>
+          </div>
+
+          <div class="review-row review-total">
+            <span>Total Deducted</span>
+            <span id="reviewTotal"></span>
           </div>
 
         </div>
 
-        <div class="actions">
-
+        <div class="action-row">
           <button
-            class="btn btn-secondary"
+            type="button"
+            class="secondary-btn"
             onclick="backToRecipient()"
           >
             Back
           </button>
 
           <button
-            class="btn btn-primary"
+            type="button"
+            class="primary-btn"
+            style="margin-top:0"
             onclick="startConfirmation()"
           >
-            Confirm Transfer
+            Confirm & Continue
           </button>
-
         </div>
 
       </section>
+
 
       <!-- OTP -->
-      <section class="card processing" id="processingStep">
+      <section class="card otp-card" id="otpStep">
 
-  <div class="processing-icon"></div>
-
-  <h2>Processing transfer</h2>
-
-  <p id="processingMessage">
-    Please don't close this page while your transfer is being processed.
-  </p>
-
-  <div class="processing-trail">
-
-    <div class="processing-step" id="processStep1">
-      <div class="processing-dot">1</div>
-      <span>Preparing transfer</span>
-    </div>
-
-    <div class="processing-step" id="processStep2">
-      <div class="processing-dot">2</div>
-      <span>Running security checks</span>
-    </div>
-
-    <div class="processing-step" id="processStep3">
-      <div class="processing-dot">3</div>
-      <span>Processing transfer</span>
-    </div>
-
-    <div class="processing-step" id="processStep4">
-      <div class="processing-dot">4</div>
-      <span>Finalizing transfer</span>
-    </div>
-
-  </div>
-
-</section>
-
-      <section class="card" id="otpStep">
-
-        <div class="otp-box">
-
-          <div class="lock-icon">🔐</div>
-
-          <h2>Security verification</h2>
-
+        <div class="otp-title">
+          <h2>Security Verification</h2>
           <p>
-            For your security, enter the verification code sent to your registered contact method.
+            Enter the security code to authorize this transfer.
           </p>
+        </div>
 
-          <input
-            type="text"
-            id="otp"
-            class="otp-input"
-            maxlength="6"
-            inputmode="numeric"
-            placeholder="••••••"
+        <label
+          for="otpInput"
+          style="display:block;font-size:12px;font-weight:700;color:#46566b;margin-bottom:8px;"
+        >
+          Security Code
+        </label>
+
+        <input
+          type="text"
+          id="otpInput"
+          class="otp-input"
+          inputmode="numeric"
+          maxlength="6"
+          placeholder="••••••"
+        >
+
+        <div class="otp-note">
+          Enter the 6-digit security code associated with your account.
+        </div>
+
+        <div class="action-row">
+          <button
+            type="button"
+            class="secondary-btn"
+            onclick="backToReview()"
           >
+            Back
+          </button>
 
-          <div class="error-text" id="otpError">
-            Enter the 6-digit verification code.
-          </div>
-
-          <div class="actions">
-
-            <button
-              class="btn btn-secondary"
-              onclick="backToReview()"
-            >
-              Back
-            </button>
-
-            <button
-              class="btn btn-primary"
-              onclick="processTransfer()"
-            >
-              Verify & Continue
-            </button>
-
-          </div>
-
+          <button
+            type="button"
+            class="primary-btn"
+            style="margin-top:0"
+            onclick="processTransfer()"
+          >
+            Verify & Send
+          </button>
         </div>
 
       </section>
+
 
       <!-- PROCESSING -->
+      <section class="card processing-card" id="processingStep">
 
-      <section class="card processing" id="processingStep">
+        <div class="processing-icon"></div>
 
-        <div class="spinner"></div>
+        <h2>Processing Transfer</h2>
+        <p>Please wait while your transfer is being processed.</p>
 
-        <h2>Processing transfer...</h2>
+        <div class="processing-trail">
 
-        <p>
-          Please don't close this page while your transfer is being processed.
-        </p>
-
-      </section>
-
-      <!-- SUCCESS -->
-
-      <section class="card" id="successStep">
-
-        <div class="success">
-
-          <div class="success-icon">✓</div>
-
-          <h2>Transfer submitted successfully</h2>
-
-          <p>
-            Your transfer request has been submitted for processing.
-          </p>
-
-          <div class="reference">
-            Confirmation Number:
-            <strong id="confirmationNumber"></strong>
+          <div class="processing-item" id="processingItem1">
+            <div class="trail-icon">1</div>
+            <span>Validating transfer information</span>
           </div>
 
-          <div class="actions">
+          <div class="processing-item" id="processingItem2">
+            <div class="trail-icon">2</div>
+            <span>Checking account availability</span>
+          </div>
 
-            <button
-              class="btn btn-secondary"
-              onclick="printReceipt()"
-            >
-              View / Print Receipt
-            </button>
+          <div class="processing-item" id="processingItem3">
+            <div class="trail-icon">3</div>
+            <span>Authorizing transfer</span>
+          </div>
 
-            <button
-              class="btn btn-primary"
-              onclick="window.location.href='dashboard.html'"
-            >
-              Back to Dashboard
-            </button>
-
+          <div class="processing-item" id="processingItem4">
+            <div class="trail-icon">4</div>
+            <span>Completing transfer</span>
           </div>
 
         </div>
 
       </section>
 
-      <div class="footer-note">
-        Blight Bank • Secure online banking
-      </div>
 
-    </div>
+      <!-- SUCCESS -->
+      <section class="card success-card" id="successStep">
 
+        <div class="success-icon">✓</div>
+
+        <div class="success-title">
+          <h2>Transfer Submitted</h2>
+          <p>
+            Your transfer has been successfully submitted for processing.
+          </p>
+        </div>
+
+        <div class="receipt" id="receipt">
+
+          <div class="receipt-header">
+            <strong>BLIGHT BANK</strong>
+            <span>Transfer Confirmation</span>
+          </div>
+
+          <div class="receipt-row">
+            <span>Recipient</span>
+            <span id="receiptRecipient"></span>
+          </div>
+
+          <div class="receipt-row">
+            <span>Bank</span>
+            <span id="receiptBank"></span>
+          </div>
+
+          <div class="receipt-row">
+            <span>Amount</span>
+            <span id="receiptAmount"></span>
+          </div>
+
+          <div class="receipt-row">
+            <span>Transfer Fee</span>
+            <span id="receiptFee"></span>
+          </div>
+
+          <div class="receipt-row">
+            <span>Total Deducted</span>
+            <span id="receiptTotal"></span>
+          </div>
+
+          <div class="receipt-row">
+            <span>Confirmation Number</span>
+            <span id="confirmationNumber"></span>
+          </div>
+
+          <div class="receipt-row">
+            <span>Status</span>
+            <span style="color:#21864a;">Submitted</span>
+          </div>
+
+        </div>
+
+        <div class="action-row" style="justify-content:center;">
+          <button
+            type="button"
+            class="secondary-btn"
+            onclick="printReceipt()"
+          >
+            Print Receipt
+          </button>
+
+          <button
+            type="button"
+            class="primary-btn"
+            style="margin-top:0;width:auto;padding-left:28px;padding-right:28px;"
+            onclick="window.location.href='dashboard.html'"
+          >
+            Return to Dashboard
+          </button>
+        </div>
+
+      </section>
+
+    </section>
   </main>
 
-</div>
+  <div class="toast" id="toast"></div>
 
-<div class="toast" id="toast"></div>
+  <script>
+    const AVAILABLE_BALANCE = 2600450.00;
+    const TRANSFER_FEE = 4.50;
+    const DAILY_LIMIT = 25000.00;
 
-<script>
+    let recipientVerified = false;
+    let currentTransfer = {};
+    let verificationTimer = null;
 
-  const availableBalance = 2600450.00;
-  const transferFee = 4.50;
-  const dailyTransferLimit = 25000.00;
+    const steps = [
+      document.getElementById("step1"),
+      document.getElementById("step2"),
+      document.getElementById("step3")
+    ];
 
-  let recipientVerified = false;
-  let transferAmount = 0;
+    function showToast(message) {
+      const toast = document.getElementById("toast");
 
-  function showToast(message) {
-    const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.style.display = "block";
 
-    toast.textContent = message;
-    toast.classList.add("show");
-
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 3000);
-  }
-
-  function formatAmount(input) {
-
-    let value = input.value.replace(/[^0-9.]/g, "");
-
-    const parts = value.split(".");
-
-    if (parts.length > 2) {
-      value = parts[0] + "." + parts.slice(1).join("");
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3500);
     }
 
-    if (parts[1] && parts[1].length > 2) {
-      value = parts[0] + "." + parts[1].substring(0, 2);
+    function contactSupport() {
+      alert(
+        "Blight Bank Support\n\n" +
+        "Phone: +19162334022\n" +
+        "Email: blightbank@gmail.com"
+      );
     }
 
-    if (value) {
-      const number = parseFloat(value);
+    function resetVerification() {
+      recipientVerified = false;
 
-      if (!isNaN(number)) {
-        input.value = "$" + number.toLocaleString("en-US", {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2
-        });
+      const verifyBox = document.getElementById("verifyBox");
+      const verifiedRecipient = document.getElementById("verifiedRecipient");
+      const continueBtn = document.getElementById("continueBtn");
+
+      verifyBox.style.display = "none";
+      verifiedRecipient.style.display = "none";
+      continueBtn.disabled = true;
+
+      for (let i = 1; i <= 4; i++) {
+        const step = document.getElementById("verificationStep" + i);
+
+        step.classList.remove("active", "completed");
+
+        const icon = step.querySelector(".verification-icon");
+        icon.textContent = i;
       }
     }
-  }
 
-  function getAmount() {
-    return parseFloat(
-      document.getElementById("amount").value
-        .replace(/[$,]/g, "")
-    ) || 0;
-  }
+    function verifyRecipient() {
+      const bank = document.getElementById("bank").value;
+      const accountType = document.getElementById("accountType").value;
+      const routingNumber = document.getElementById("routingNumber").value.trim();
+      const accountNumber = document.getElementById("accountNumber").value.trim();
+      const recipientName = document.getElementById("recipientName").value.trim();
 
-function verifyRecipient() {
+      if (!bank || !accountType || !routingNumber || !accountNumber || !recipientName) {
+        showToast("Please complete all recipient details.");
+        return;
+      }
 
-  const bank = document.getElementById("bank").value;
-  const accountType = document.getElementById("accountType").value;
-  const routing = document.getElementById("routingNumber").value.trim();
-  const account = document.getElementById("accountNumber").value.trim();
-  const name = document.getElementById("recipientName").value.trim();
+      if (!/^\d{9}$/.test(routingNumber)) {
+        showToast("Routing number must contain 9 digits.");
+        return;
+      }
 
-  if (
-    !bank ||
-    !accountType ||
-    !/^\d{9}$/.test(routing) ||
-    !/^\d{4,17}$/.test(account) ||
-    !name
-  ) {
-    showToast("Please enter valid recipient information.");
-    return;
-  }
+      if (!/^\d{4,17}$/.test(accountNumber)) {
+        showToast("Please enter a valid account number.");
+        return;
+      }
 
-  const button = document.getElementById("verifyButton");
-  const box = document.getElementById("verifyBox");
+      resetVerification();
 
-  button.disabled = true;
-  button.textContent = "Verifying...";
+      const verifyBox = document.getElementById("verifyBox");
+      const verifyBtn = document.getElementById("verifyBtn");
 
-  box.style.display = "block";
+      verifyBox.style.display = "block";
+      verifyBtn.disabled = true;
+      verifyBtn.textContent = "Verifying...";
 
-  recipientVerified = false;
+      const verificationSteps = [
+        document.getElementById("verificationStep1"),
+        document.getElementById("verificationStep2"),
+        document.getElementById("verificationStep3"),
+        document.getElementById("verificationStep4")
+      ];
 
-  const steps = [
-    document.getElementById("verifyStep1"),
-    document.getElementById("verifyStep2"),
-    document.getElementById("verifyStep3"),
-    document.getElementById("verifyStep4")
-  ];
+      let current = 0;
 
-  steps.forEach(step => {
-    step.classList.remove("active", "completed");
-  });
+      verificationTimer = setInterval(() => {
 
-  document.getElementById("verifiedRecipient").style.display = "none";
+        if (current > 0) {
+          verificationSteps[current - 1].classList.remove("active");
+          verificationSteps[current - 1].classList.add("completed");
 
-  let currentStep = 0;
+          const previousIcon =
+            verificationSteps[current - 1].querySelector(".verification-icon");
 
-  function runVerificationStep() {
+          previousIcon.textContent = "✓";
+        }
 
-    if (currentStep > 0) {
-      steps[currentStep - 1].classList.remove("active");
-      steps[currentStep - 1].classList.add("completed");
-      steps[currentStep - 1].querySelector(".verification-icon").textContent = "✓";
+        if (current < verificationSteps.length) {
+          verificationSteps[current].classList.add("active");
+          current++;
+        }
+
+        if (current === verificationSteps.length) {
+          clearInterval(verificationTimer);
+
+          setTimeout(() => {
+
+            const lastStep = verificationSteps[3];
+
+            lastStep.classList.remove("active");
+            lastStep.classList.add("completed");
+
+            lastStep.querySelector(".verification-icon").textContent = "✓";
+
+            recipientVerified = true;
+
+            document.getElementById("verifiedRecipient").style.display = "block";
+
+            document.getElementById("verifiedName").textContent =
+              recipientName;
+
+            document.getElementById("verifiedDetails").textContent =
+              bank +
+              " • " +
+              accountType +
+              " •••• " +
+              accountNumber.slice(-4);
+
+            verifyBtn.disabled = false;
+            verifyBtn.textContent = "Recipient Verified";
+
+            document.getElementById("continueBtn").disabled = false;
+
+            showToast("Recipient information verified.");
+
+          }, 700);
+        }
+
+      }, 800);
     }
 
-    if (currentStep < steps.length) {
+    function validateRecipient() {
+      if (!recipientVerified) {
+        showToast("Please verify the recipient first.");
+        return false;
+      }
 
-      steps[currentStep].classList.add("active");
-
-      currentStep++;
-
-      setTimeout(runVerificationStep, 900);
-
-    } else {
-
-      setTimeout(() => {
-
-        recipientVerified = true;
-
-        document.getElementById("verifiedRecipient").style.display = "block";
-
-        document.getElementById("verifiedRecipientDetails").textContent =
-          name.toUpperCase() +
-          " • " +
-          bank +
-          " • " +
-          accountType +
-          " • Account ending " +
-          account.slice(-4);
-
-        button.textContent = "Recipient Verified";
-        button.disabled = true;
-
-        showToast("Recipient verified successfully.");
-
-      }, 500);
-    }
-  }
-
-  runVerificationStep();
-} {
-
-    const bank = document.getElementById("bank").value;
-    const accountType = document.getElementById("accountType").value;
-    const routing = document.getElementById("routingNumber").value.trim();
-    const account = document.getElementById("accountNumber").value.trim();
-    const name = document.getElementById("recipientName").value.trim();
-
-    if (!bank || !accountType || !/^\d{9}$/.test(routing) ||
-        !/^\d{4,17}$/.test(account) || !name) {
-
-      showToast("Please enter valid recipient information.");
-      return;
-    }
-
-    const button = document.getElementById("verifyButton");
-    const box = document.getElementById("verifyBox");
-
-    button.disabled = true;
-    button.textContent = "Verifying...";
-
-    box.style.display = "block";
-
-    document.getElementById("verifyStatus").textContent =
-      "Verifying recipient information...";
-
-    document.getElementById("statusIcon").textContent = "…";
-
-    /*
-      Production integration point:
-
-      Replace this simulated response with your secure backend
-      verification request.
-
-      Example:
-
-      fetch("/api/recipients/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          routingNumber: routing,
-          accountNumber: account,
-          bank: bank
-        })
-      })
-
-      The backend should verify the account through the
-      appropriate U.S. banking/payment provider and return
-      the verified account name.
-    */
-
-    setTimeout(() => {
-
-      recipientVerified = true;
-
-      document.getElementById("statusIcon").textContent = "✓";
-
-      document.getElementById("verifyStatus").textContent =
-        "Recipient information verified";
-
-      document.getElementById("verifiedName").textContent =
-        name.toUpperCase();
-
-      document.getElementById("verifiedDetails").textContent =
-        bank + " • " + accountType + " • Account ending " +
-        account.slice(-4);
-
-      button.textContent = "Recipient Verified";
-      button.disabled = true;
-
-      showToast("Recipient verified successfully.");
-
-    }, 1200);
-  }
-
-  function validateRecipient() {
-
-    let valid = true;
-
-    const bank = document.getElementById("bank");
-    const accountType = document.getElementById("accountType");
-    const routing = document.getElementById("routingNumber");
-    const account = document.getElementById("accountNumber");
-    const name = document.getElementById("recipientName");
-    const amount = getAmount();
-
-    document.querySelectorAll(".error-text").forEach(error => {
-      error.style.display = "none";
-    });
-
-    document.querySelectorAll("input, select").forEach(input => {
-      input.classList.remove("input-error");
-    });
-
-    if (!bank.value) {
-      bank.classList.add("input-error");
-      document.getElementById("bankError").style.display = "block";
-      valid = false;
-    }
-
-    if (!accountType.value) {
-      accountType.classList.add("input-error");
-      document.getElementById("accountTypeError").style.display = "block";
-      valid = false;
-    }
-
-    if (!/^\d{9}$/.test(routing.value.trim())) {
-      routing.classList.add("input-error");
-      document.getElementById("routingError").style.display = "block";
-      valid = false;
-    }
-
-    if (!/^\d{4,17}$/.test(account.value.trim())) {
-      account.classList.add("input-error");
-      document.getElementById("accountError").style.display = "block";
-      valid = false;
-    }
-
-    if (!name.value.trim()) {
-      name.classList.add("input-error");
-      document.getElementById("nameError").style.display = "block";
-      valid = false;
-    }
-
-    if (amount <= 0) {
-      document.getElementById("amount").classList.add("input-error");
-      document.getElementById("amountError").style.display = "block";
-      valid = false;
-    }
-
-    if (amount > dailyTransferLimit) {
-      showToast(
-        "This transfer exceeds the daily transfer limit of $" +
-        dailyTransferLimit.toLocaleString("en-US", {
-          minimumFractionDigits: 2
-        })
+      const amount = parseFloat(
+        document.getElementById("amount").value
       );
-      valid = false;
+
+      const amountError = document.getElementById("amountError");
+
+      amountError.style.display = "none";
+      amountError.textContent = "";
+
+      if (!amount || amount <= 0) {
+        amountError.textContent = "Enter a valid transfer amount.";
+        amountError.style.display = "block";
+        return false;
+      }
+
+      if (amount > DAILY_LIMIT) {
+        amountError.textContent =
+          "This transfer exceeds the daily transfer limit of $25,000.00.";
+
+        amountError.style.display = "block";
+        return false;
+      }
+
+      const total = amount + TRANSFER_FEE;
+
+      if (total > AVAILABLE_BALANCE) {
+        amountError.textContent =
+          "Insufficient available balance for this transfer and fee.";
+
+        amountError.style.display = "block";
+        return false;
+      }
+
+      return true;
     }
 
-    if (amount + transferFee > availableBalance) {
-      showToast("Insufficient available balance.");
-      valid = false;
+    function goToReview() {
+      if (!validateRecipient()) {
+        return;
+      }
+
+      const bank = document.getElementById("bank").value;
+      const accountType = document.getElementById("accountType").value;
+      const routingNumber =
+        document.getElementById("routingNumber").value.trim();
+      const accountNumber =
+        document.getElementById("accountNumber").value.trim();
+      const recipientName =
+        document.getElementById("recipientName").value.trim();
+      const amount =
+        parseFloat(document.getElementById("amount").value);
+
+      const total = amount + TRANSFER_FEE;
+
+      currentTransfer = {
+        bank,
+        accountType,
+        routingNumber,
+        accountNumber,
+        recipientName,
+        amount,
+        fee: TRANSFER_FEE,
+        total,
+        note: document.getElementById("note").value.trim()
+      };
+
+      document.getElementById("reviewRecipient").textContent =
+        recipientName;
+
+      document.getElementById("reviewBank").textContent =
+        bank;
+
+      document.getElementById("reviewAccountType").textContent =
+        accountType;
+
+      document.getElementById("reviewAccountNumber").textContent =
+        "•••• " + accountNumber.slice(-4);
+
+      document.getElementById("reviewRoutingNumber").textContent =
+        routingNumber;
+
+      document.getElementById("reviewAmount").textContent =
+        formatCurrency(amount);
+
+      document.getElementById("reviewFee").textContent =
+        formatCurrency(TRANSFER_FEE);
+
+      document.getElementById("reviewTotal").textContent =
+        formatCurrency(total);
+
+      document.getElementById("recipientStep").style.display = "none";
+      document.getElementById("reviewStep").style.display = "block";
+
+      updateSteps(2);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    return valid;
-  }
+    function startConfirmation() {
+      document.getElementById("reviewStep").style.display = "none";
+      document.getElementById("otpStep").style.display = "block";
 
-  function goToReview() {
+      updateSteps(3);
 
-    if (!validateRecipient()) {
-      return;
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    if (!recipientVerified) {
-      showToast("Please verify the recipient before continuing.");
-      return;
+    function processTransfer() {
+      const otp = document.getElementById("otpInput").value.trim();
+
+      if (!/^\d{6}$/.test(otp)) {
+        showToast("Enter the 6-digit security code.");
+        return;
+      }
+
+      document.getElementById("otpStep").style.display = "none";
+      document.getElementById("processingStep").style.display = "block";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      const processingItems = [
+        document.getElementById("processingItem1"),
+        document.getElementById("processingItem2"),
+        document.getElementById("processingItem3"),
+        document.getElementById("processingItem4")
+      ];
+
+      processingItems.forEach(item => {
+        item.classList.remove("active", "completed");
+
+        const icon = item.querySelector(".trail-icon");
+
+        icon.textContent =
+          Array.from(processingItems).indexOf(item) + 1;
+      });
+
+      let current = 0;
+
+      const timer = setInterval(() => {
+
+        if (current > 0) {
+          processingItems[current - 1].classList.remove("active");
+          processingItems[current - 1].classList.add("completed");
+
+          processingItems[current - 1]
+            .querySelector(".trail-icon")
+            .textContent = "✓";
+        }
+
+        if (current < processingItems.length) {
+          processingItems[current].classList.add("active");
+          current++;
+        }
+
+        if (current === processingItems.length) {
+          clearInterval(timer);
+
+          setTimeout(() => {
+            processingItems[3].classList.remove("active");
+            processingItems[3].classList.add("completed");
+
+            processingItems[3]
+              .querySelector(".trail-icon")
+              .textContent = "✓";
+
+            showSuccess();
+
+          }, 900);
+        }
+
+      }, 900);
     }
 
-    transferAmount = getAmount();
-
-    const total = transferAmount + transferFee;
-
-    document.getElementById("reviewRecipient").textContent =
-      document.getElementById("recipientName").value.toUpperCase();
-
-    document.getElementById("reviewBank").textContent =
-      document.getElementById("bank").value;
-
-    const account = document.getElementById("accountNumber").value;
-
-    document.getElementById("reviewAccount").textContent =
-      "••••" + account.slice(-4);
-
-    document.getElementById("reviewType").textContent =
-      document.getElementById("accountType").value;
-
-    document.getElementById("reviewAmount").textContent =
-      formatCurrency(transferAmount);
-
-    document.getElementById("reviewFee").textContent =
-      formatCurrency(transferFee);
-
-    document.getElementById("reviewTotal").textContent =
-      formatCurrency(total);
-
-    const note = document.getElementById("note").value.trim();
-
-    document.getElementById("reviewNote").textContent =
-      note || "None";
-
-    document.getElementById("recipientStep").style.display = "none";
-    document.getElementById("reviewStep").style.display = "block";
-
-    updateSteps(2);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  }
-
-  function formatCurrency(value) {
-
-    return value.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD"
-    });
-
-  }
-
-  function startConfirmation() {
-
-    document.getElementById("reviewStep").style.display = "none";
-    document.getElementById("otpStep").style.display = "block";
-
-    updateSteps(3);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  }
-
-  function processTransfer() {
-
-  const otp = document.getElementById("otp").value.trim();
-
-  if (!/^\d{6}$/.test(otp)) {
-    document.getElementById("otpError").style.display = "block";
-    showToast("Enter the 6-digit verification code.");
-    return;
-  }
-
-  document.getElementById("otpError").style.display = "none";
-
-  document.getElementById("otpStep").style.display = "none";
-  document.getElementById("processingStep").style.display = "block";
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-  const steps = [
-    document.getElementById("processStep1"),
-    document.getElementById("processStep2"),
-    document.getElementById("processStep3"),
-    document.getElementById("processStep4")
-  ];
-
-  steps.forEach(step => {
-    step.classList.remove("active", "completed");
-  });
-
-  let currentStep = 0;
-
-  function runProcessingStep() {
-
-    if (currentStep > 0) {
-      steps[currentStep - 1].classList.remove("active");
-      steps[currentStep - 1].classList.add("completed");
-      steps[currentStep - 1]
-        .querySelector(".processing-dot")
-        .textContent = "✓";
-    }
-
-    if (currentStep < steps.length) {
-
-      steps[currentStep].classList.add("active");
-
-      currentStep++;
-
-      setTimeout(runProcessingStep, 1100);
-
-    } else {
-
-      setTimeout(() => {
-
-        document.getElementById("processingStep").style.display = "none";
-        document.getElementById("successStep").style.display = "block";
-
-        const reference =
-          "BL" + Date.now().toString().slice(-10);
-
-        document.getElementById("confirmationNumber").textContent =
-          reference;
-
-        showToast("Transfer completed successfully.");
-
-      }, 600);
-    }
-  }
-
-  runProcessingStep();
-}
-
-    const otp = document.getElementById("otp").value.trim();
-
-    if (!/^\d{6}$/.test(otp)) {
-
-      document.getElementById("otpError").style.display = "block";
-
-      showToast("Enter the 6-digit verification code.");
-
-      return;
-    }
-
-    document.getElementById("otpError").style.display = "none";
-
-    document.getElementById("otpStep").style.display = "none";
-    document.getElementById("processingStep").style.display = "block";
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
-    setTimeout(() => {
+    function showSuccess() {
+      const confirmation =
+        "BL" +
+        Date.now().toString().slice(-10);
 
       document.getElementById("processingStep").style.display = "none";
       document.getElementById("successStep").style.display = "block";
 
-      const reference =
-        "BL" +
-        Date.now().toString().slice(-10);
+      document.getElementById("receiptRecipient").textContent =
+        currentTransfer.recipientName;
+
+      document.getElementById("receiptBank").textContent =
+        currentTransfer.bank;
+
+      document.getElementById("receiptAmount").textContent =
+        formatCurrency(currentTransfer.amount);
+
+      document.getElementById("receiptFee").textContent =
+        formatCurrency(currentTransfer.fee);
+
+      document.getElementById("receiptTotal").textContent =
+        formatCurrency(currentTransfer.total);
 
       document.getElementById("confirmationNumber").textContent =
-        reference;
+        confirmation;
 
-      showToast("Transfer processed successfully.");
+      updateSteps(3);
 
-    }, 2500);
-  }
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
-  function backToRecipient() {
-
-    document.getElementById("reviewStep").style.display = "none";
-    document.getElementById("recipientStep").style.display = "block";
-
-    updateSteps(1);
-  }
-
-  function backToReview() {
-
-    document.getElementById("otpStep").style.display = "none";
-    document.getElementById("reviewStep").style.display = "block";
-
-    updateSteps(2);
-  }
-
-  function updateSteps(activeStep) {
-
-    for (let i = 1; i <= 3; i++) {
-
-      const step = document.getElementById("stepIndicator" + i);
-
-      step.classList.remove("active");
-      step.classList.remove("completed");
-
-      if (i < activeStep) {
-        step.classList.add("completed");
-      }
-
-      if (i === activeStep) {
-        step.classList.add("active");
-      }
+      showToast("Transfer successfully submitted.");
     }
-  }
 
-  function printReceipt() {
+    function backToRecipient() {
+      document.getElementById("reviewStep").style.display = "none";
+      document.getElementById("recipientStep").style.display = "block";
 
-    const recipient =
-      document.getElementById("reviewRecipient").textContent;
+      updateSteps(1);
 
-    const amount =
-      document.getElementById("reviewAmount").textContent;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-    const reference =
-      document.getElementById("confirmationNumber").textContent;
+    function backToReview() {
+      document.getElementById("otpStep").style.display = "none";
+      document.getElementById("reviewStep").style.display = "block";
 
-    const receiptWindow = window.open("", "_blank");
+      updateSteps(2);
 
-    receiptWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Blight Bank Transfer Receipt</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            padding: 50px;
-            color: #172033;
-          }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-          h1 {
-            color: #102f56;
-          }
+    function updateSteps(activeStep) {
+      steps.forEach((step, index) => {
 
-          .receipt {
-            max-width: 600px;
-            margin: auto;
-            border: 1px solid #ddd;
-            padding: 30px;
-          }
+        step.classList.remove("active", "completed");
 
-          .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid #eee;
-          }
+        if (index + 1 < activeStep) {
+          step.classList.add("completed");
 
-          .label {
-            color: #777;
-          }
+          step.querySelector(".step-number").textContent = "✓";
 
-          .total {
-            font-size: 20px;
-            font-weight: bold;
-          }
-        </style>
-      </head>
+        } else if (index + 1 === activeStep) {
+          step.classList.add("active");
 
-      <body>
+          step.querySelector(".step-number").textContent =
+            index + 1;
 
-        <div class="receipt">
+        } else {
+          step.querySelector(".step-number").textContent =
+            index + 1;
+        }
+      });
+    }
 
-          <h1>BLIGHT BANK</h1>
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD"
+      }).format(amount);
+    }
 
-          <h2>Transfer Receipt</h2>
+    function printReceipt() {
+      const receipt = document.getElementById("receipt").innerHTML;
 
-          <div class="row">
-            <span class="label">Recipient</span>
-            <strong>${recipient}</strong>
+      const printWindow = window.open(
+        "",
+        "",
+        "width=700,height=800"
+      );
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Blight Bank Transfer Receipt</title>
+          <style>
+            body {
+              font-family: Arial, Helvetica, sans-serif;
+              padding: 40px;
+              color: #17253a;
+            }
+
+            h1 {
+              font-size: 22px;
+              margin-bottom: 25px;
+            }
+
+            .receipt {
+              border: 1px solid #ddd;
+              border-radius: 10px;
+              overflow: hidden;
+            }
+
+            .receipt-header {
+              background: #102f56;
+              color: white;
+              padding: 18px;
+            }
+
+            .receipt-header strong {
+              font-size: 18px;
+            }
+
+            .receipt-header span {
+              display: block;
+              margin-top: 5px;
+              font-size: 12px;
+              color: #d5deea;
+            }
+
+            .receipt-row {
+              display: flex;
+              justify-content: space-between;
+              padding: 14px;
+              border-bottom: 1px solid #eee;
+              font-size: 13px;
+            }
+
+            .receipt-row span:first-child {
+              color: #777;
+            }
+
+            .receipt-row span:last-child {
+              font-weight: 700;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Transfer Receipt</h1>
+          <div class="receipt">
+            ${receipt}
           </div>
+        </body>
+        </html>
+      `);
 
-          <div class="row">
-            <span class="label">Amount</span>
-            <strong>${amount}</strong>
-          </div>
+      printWindow.document.close();
+      printWindow.focus();
 
-          <div class="row">
-            <span class="label">Confirmation Number</span>
-            <strong>${reference}</strong>
-          </div>
+      setTimeout(() => {
+        printWindow.print();
+      }, 300);
+    }
 
-          <div class="row total">
-            <span>Status</span>
-            <strong>Submitted</strong>
-          </div>
+    document.getElementById("routingNumber")
+      .addEventListener("input", function() {
+        this.value = this.value.replace(/\D/g, "");
 
-        </div>
+        resetVerification();
+      });
 
-        <script>
-          window.print();
-        <\/script>
+    document.getElementById("accountNumber")
+      .addEventListener("input", function() {
+        this.value = this.value.replace(/\D/g, "");
 
-      </body>
-      </html>
-    `);
+        resetVerification();
+      });
 
-    receiptWindow.document.close();
-  }
+    document.getElementById("bank")
+      .addEventListener("change", resetVerification);
 
-  function contactSupport() {
+    document.getElementById("accountType")
+      .addEventListener("change", resetVerification);
 
-    alert(
-      "Blight Bank Support\n\n" +
-      "Phone: +19162334022\n" +
-      "Email: blightbank@gmail.com"
-    );
+    document.getElementById("recipientName")
+      .addEventListener("input", resetVerification);
 
-  }
+    document.getElementById("amount")
+      .addEventListener("input", function() {
+        const amount = parseFloat(this.value);
+        const amountError = document.getElementById("amountError");
 
-</script>
+        amountError.style.display = "none";
+
+        if (amount > DAILY_LIMIT) {
+          amountError.textContent =
+            "Daily transfer limit is $25,000.00.";
+
+          amountError.style.display = "block";
+        }
+      });
+  </script>
 
 </body>
 </html>
