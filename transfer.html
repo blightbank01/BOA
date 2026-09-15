@@ -966,16 +966,38 @@
 
             <div class="verify-box" id="verifyBox">
 
-              <div class="verify-status">
-                <div class="status-icon" id="statusIcon">✓</div>
-                <span id="verifyStatus">Recipient verified</span>
-              </div>
+  <div class="verification-title">
+    Verifying recipient information
+  </div>
 
-              <div class="verify-name" id="verifiedName"></div>
+  <div class="verification-trail">
 
-              <div class="verify-details" id="verifiedDetails"></div>
+    <div class="verification-step" id="verifyStep1">
+      <div class="verification-icon">1</div>
+      <span>Checking bank details</span>
+    </div>
 
-            </div>
+    <div class="verification-step" id="verifyStep2">
+      <div class="verification-icon">2</div>
+      <span>Checking routing number</span>
+    </div>
+
+    <div class="verification-step" id="verifyStep3">
+      <div class="verification-icon">3</div>
+      <span>Checking account information</span>
+    </div>
+
+    <div class="verification-step" id="verifyStep4">
+      <div class="verification-icon">4</div>
+      <span>Confirming recipient</span>
+    </div>
+
+  </div>
+
+  <div class="verified-recipient" id="verifiedRecipient">
+    <strong>✓ Recipient verified</strong>
+    <span id="verifiedRecipientDetails"></span>
+  </div>
 
           </div>
 
